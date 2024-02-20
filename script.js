@@ -9,6 +9,11 @@ const c = canvas.getContext('2d')
 canvas.width = innerWidth
 canvas.height = innerHeight
 
+const score = document.querySelector('#score')
+const scoreBrd = document.querySelector('#scoreBrd')
+const startGameBtm = document.querySelector('#startGameBtm')
+const startGameBrd = document.querySelector('#startGameBrd')
+
 /// Player class [User Base Character]
 class Player {
     constructor(x, y, color, radius){
@@ -121,19 +126,45 @@ class Particle {
 
 
 /// player creation
-const player = new Player(innerWidth / 2, innerHeight / 2, 'royalblue', 50)
-
+let player = new Player(innerWidth / 2, innerHeight / 2, 'royalblue', 50)
 
 /// Projectiles list
-const DARTS = []
+let DARTS = []
 /// Enemies list
-const TARGETS = []
+let TARGETS = []
 ///
-const PARTICLES = []
+let PARTICLES = []
 
 //['#8f83d8', '#d69cbc', '#51074a', '#56bf52', '#437a37',
 //'#b9cefb', '#660000', '#e7c459', '#371f30', '#fff49f',
 //'#d89eff', '#fff49f', '#2d2c4e', '#ff8c8c', '#dc143c']
+
+// RESTART GAME
+function init()
+{   
+    // Select all canvas elements from html
+    const canvas = document.querySelector('canvas')
+
+    // Returns an object that provides methods and properties for drawing
+    // and manipulating images and graphics on a canvas element
+    const c = canvas.getContext('2d')
+
+    // Set the width & height to fill the screen
+    canvas.width = innerWidth
+    canvas.height = innerHeight
+    /// player creation
+    player = new Player(innerWidth / 2, innerHeight / 2, 'royalblue', 50)
+    /// Projectiles list
+    DARTS = []
+    /// Enemies list
+    TARGETS = []
+    /// Dart and Target collision affect
+    PARTICLES = []
+    // reset score
+    SCORE = 0
+    score.innerHTML = SCORE
+    scoreBrd.innerHTML = SCORE
+}
 
 // Spawn Targets
 function spawnTargets() {
@@ -160,13 +191,14 @@ function spawnTargets() {
             y: Math.sin(angle)
         }
         TARGETS.push(new Targets(x, y, color, radius, velocity))
-    }, 1500)
+    }, 1400)
 }
 
 
 let animeID
-speed = 1
-/// Animation loop
+let SCORE = 0
+
+/// Animation GAME LOOP \\\
 function animator() {
     animeID = requestAnimationFrame(animator)
     // Clear Frame
@@ -201,11 +233,14 @@ function animator() {
     TARGETS.forEach((target, Tndx) => {
         target.update()
 
+        // GAME OVER
         const dist = Math.hypot(player.x - target.x, player.y - target.y)
         if (dist - target.radius - player.radius < 1)
         {
             cancelAnimationFrame(animeID)
-            alert('Game Over')
+            startGameBrd.style.display = 'flex'
+            scoreBrd.innerHTML = SCORE
+
         }
         // Compare distances, check is objects touch
         DARTS.forEach((dart, Dndx) => {
@@ -228,6 +263,9 @@ function animator() {
                 // When Projectile touch Target (shrink of remove)
                 if (target.radius - 10 > 10)
                 {
+                    SCORE += 100
+                    score.innerHTML = SCORE
+
                     // Green Sock Animation
                     gsap.to(target, {
                         radius: target.radius - 10
@@ -236,11 +274,14 @@ function animator() {
                         DARTS.splice(Dndx, 1)
                     }, 0)
                 } else {
-                // setTimeout waits until the next frame to perform changes
-                setTimeout(() => {
-                    TARGETS.splice(Tndx, 1)
-                    DARTS.splice(Dndx, 1)
-                }, 0)
+
+                    SCORE += 250
+                    score.innerHTML = SCORE
+                    // setTimeout waits until the next frame to perform changes
+                    setTimeout(() => {
+                        TARGETS.splice(Tndx, 1)
+                        DARTS.splice(Dndx, 1)
+                    }, 0)
                 }
             }
         })
@@ -248,26 +289,85 @@ function animator() {
 }
 
 
+
+
+/// InGame Click Management \\\
+
+/// NORMAL MODE: In this mode, Projectiles are shot for each mouse click
 // listen for mouse clicks
-// event contains mouse click information
-addEventListener('click', (event) => {
-    // Get the angle of the projectile
-    const angle = Math.atan2(event.clientY - canvas.height / 2 , event.clientX - canvas.width / 2)
-    const velocity = {
-        x: Math.cos(angle),
-        y: Math.sin(angle)
+function Normal() {
+    // listen for mouse clicks
+    // event contains mouse click information
+    addEventListener('click', (event) => {
+        // Get the angle of the projectile
+        const angle = Math.atan2(event.clientY - canvas.height / 2 , event.clientX - canvas.width / 2)
+        const velocity = {
+            x: Math.cos(angle),
+            y: Math.sin(angle)
+        }
+        // Projectile creation (on click)
+        DARTS.push(new Dart(
+            canvas.width / 2,
+            canvas.height / 2,
+            'white',
+            5,
+            velocity
+        ))
+    })
+}
+
+/// OVERDRIVE MODE: WIn this mode, Projectiles are shot as long as the mouse click is down
+// listen for mouse down
+function Overdrive()
+{
+    let isMouseDown = false
+
+    // Function to create a projectile
+    function createProjectile(event) {
+        const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2);
+        const velocity = {
+            x: Math.cos(angle),
+            y: Math.sin(angle)
+        };
+
+        // Projectile creation
+        DARTS.push(new Dart(
+            canvas.width / 2,
+            canvas.height / 2,
+            'red',
+            5,
+            velocity
+        ));
     }
-    // Projectile creation (on click)
-    DARTS.push(new Dart(
-        canvas.width / 2,
-        canvas.height / 2,
-        'red',
-        5,
-        velocity
-    ))
+
+    //const createProjectileThrottled = _.throttle(createProjectile, 100);
+
+    // Listen for mouse down event
+    addEventListener('mousedown', (event) => {
+        isMouseDown = true;
+        createProjectile(event);
+    });
+    
+    // Listen for mouse move event
+    addEventListener('mousemove', (event) => {
+        createProjectile(event);
+    });
+    // Listen for mouse up event
+    addEventListener('mouseup', () => {
+        isMouseDown = false;
+    });
+}
+
+
+
+/// START GAME \\\
+startGameBtm.addEventListener('click', () => {
+    startGameBrd.style.display = 'none'
+    init()
+    animator()
+    spawnTargets()
+
+    // Drive type
+    Normal()
+    //Overdrive()
 })
-
-
-
-animator()
-spawnTargets()
