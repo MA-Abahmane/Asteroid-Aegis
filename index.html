@@ -1,7 +1,19 @@
 <!-- tailwindcss CSS Framework and CSS file -->
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- Game Styling -->
+
 <link rel="stylesheet" href="style.css">
+
+
+<div class="contain">
+    <div class="menu">
+        <button type="button" id="musicControl"> </button>
+        <button type="button" id="soundControl">  </button>
+        <button type="button" id="gameControl">  </button>
+    </div>
+    <div class="menuButton">
+        <button type="button" id="menuButton"> <img class="w-8" src="ico/bb.png" alt="sound"> </button>
+    </div>
+</div>
 
 
 <!-- Score board -->
@@ -12,7 +24,7 @@
         <h1 id='scoreBrd' class="text-4xl font-bold leading-none">0</h1>
         <p class="text-sm text-gray-700 mb-4">Points</p>
         <div>
-            <button id="startGameBtm" class="bg-blue-500 text-white w-full py-3 rounded-full text-md">Start Game</button>
+            <button id="startGameBtm" class="bg-blue-500 text-white w-full py-3 rounded-full text-md hover:bg-blue-600 transition duration-350">Start Game</button>
         </div>
     </div>
 </div>
@@ -22,7 +34,7 @@
 </canvas>
 
 
-<!-- GreenSock Animation Platform -->
+<!-- Green Sock Animation -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- Game Script -->
 <script src="./script.js"></script>

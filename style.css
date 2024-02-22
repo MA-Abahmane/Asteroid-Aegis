@@ -1,6 +1,91 @@
-
+:root { touch-action: pan-x pan-y; height: 100%; }
 
 body {
     margin: 0;
     background: black;
 }
+
+.contain {
+    width: 70px;
+    height: 270px;
+    position: absolute;
+    top: -210px;
+    right: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    transition-delay: 1s;
+    transition: top .5s ease;
+    z-index: 1;
+}
+.contain:hover {
+    top: 10;
+}
+.contain:hover .menuButton {
+    transform: rotate(180deg);
+}
+
+
+.menu {
+    width: 50px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    background: white;
+    border-radius: 100px;
+}
+
+.menuButton {
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 50px;
+
+    transition: .5s ease;
+}
+
+
+/* Button images */
+#musicControl {
+    width: 42px;
+    height: 42px;
+    background-size: contain;
+    background-image: url(ico/mm.png);
+
+    transition: .5s;
+}
+#musicControl:hover {
+    opacity: 0.85;
+}
+
+#soundControl {
+    width: 42px;
+    height: 42px;
+    background-size: contain;
+    background-image: url(ico/nn.png);
+
+    transition: .5s;
+}
+#soundControl:hover {
+    opacity: 0.85;
+}
+
+#gameControl {
+    width: 44px;
+    height: 44px;
+    background-size: contain;
+    background-image: url(ico/pausen.png);
+    
+    transition: .2s;
+}
+#gameControl:hover {
+    opacity: 0.85;
+}
+
