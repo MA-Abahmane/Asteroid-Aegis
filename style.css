@@ -82,10 +82,9 @@ body {
     height: 44px;
     background-size: contain;
     background-image: url(ico/pausen.png);
-    
+
     transition: .2s;
 }
 #gameControl:hover {
     opacity: 0.85;
 }
-

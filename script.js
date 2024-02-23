@@ -86,11 +86,26 @@ class Targets {
         c.fillStyle = this.color
         c.fill()
     }
-    update () {
+    update() {
         // Update Projectile position by velocity
         this.draw()
         this.x += this.vel.x
         this.y += this.vel.y
+    }
+}
+
+// Super Targets [Boss Enemies]
+class colossalTargets extends Targets {
+    constructor(x, y, color, radius, velocity) {
+        super(x, y, color, radius, velocity)
+        this.colossal = true
+    }
+
+    update() {
+        // Update Projectile position by velocity
+        this.draw()
+        this.x += this.vel.x / 2
+        this.y += this.vel.y / 2
     }
 }
 
@@ -190,11 +205,13 @@ function musiker()
 /// player creation
 let player = new Player(innerWidth / 2, innerHeight / 2, 'royalblue', 50)
 
+///
+let GAME0N = false
 /// Projectiles list
 let DARTS = []
 /// Enemies list
 let TARGETS = []
-///
+/// Particles list
 let PARTICLES = []
 
 //['#8f83d8', '#d69cbc', '#51074a', '#56bf52', '#437a37',
@@ -204,7 +221,7 @@ let PARTICLES = []
 /// RESTART GAME
 function init()
 {
-
+    GAME0N = true
     c.clearRect(0, 0, canvas.width, canvas.height)
 
     /// player creation
@@ -218,7 +235,7 @@ function init()
     PARTICLES = []
 
     //\\ This line was added due to Canvas having replay performance issues
-     if (SCORE > 0) location.reload()
+    if (SCORE > 0) location.reload()
 
     // reset score
     SCORE = 0
@@ -227,10 +244,11 @@ function init()
 }
 
 /// SPAWN Targets
+let timer = 0
 function spawnTargets() {
     // make a call each 1500 millisecond
     setInterval(() => {
-        if (!PAUSED)
+        if (!PAUSED && GAME0N)
         {
             //# Random Target size
             const radius = Math.random() * (50 - 15) + 15
@@ -253,11 +271,46 @@ function spawnTargets() {
                 y: Math.sin(angle)
             }
             TARGETS.push(new Targets(x, y, color, radius, velocity))
+
+
+            //~ Unleash The COLOSSAL Target ~\\
+            if (SCORE > 50000)
+            {
+                if (timer >= 40)
+                {
+                    let radius = 100
+                    let x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius
+                    let y = Math.random() * canvas.height
+                    const angle = Math.atan2(canvas.height / 2 - y , canvas.width / 2 - x)
+                    const velocity = {
+                        x: Math.cos(angle),
+                        y: Math.sin(angle)
+                    }
+                    TARGETS.push(new colossalTargets(x, y, 'white', radius, velocity))
+                    timer = 0
+                }
+                else
+                    timer++
+            }
+
         }
     }, 1400)
 }
 
-
+/// Player Chameleon Mode
+function col() {
+    // Green Sock Animation
+    let n = 0
+    setInterval(() => {
+        if (!PAUSED && GAME0N)
+        {
+            gsap.to(player, {
+                color: `hsl(${n}, 55%, 55%)`
+            })
+            n += 2
+        }
+    }, 1000)
+}
 
 //-/ Animation GAME LOOP \-\\
 let animeID
@@ -269,6 +322,7 @@ function animator() {
     // Clear Frame
     c.fillStyle = 'rgba(0, 0 , 0 , .1)'
     c.fillRect(0, 0, canvas.width, canvas.height)
+
     // Draw player
     player.draw()
 
@@ -298,7 +352,7 @@ function animator() {
     TARGETS.forEach((target, Tndx) => {
         target.update()
 
-        // GAME OVER
+        //| GAME OVER |\\
         const dist = Math.hypot(player.x - target.x, player.y - target.y)
         if (dist - target.radius - player.radius < 1)
         {
@@ -307,6 +361,7 @@ function animator() {
             cancelAnimationFrame(animeID)
             startGameBrd.style.display = 'flex'
             scoreBrd.innerHTML = SCORE
+            GAME0N = false
 
         }
         // Compare distances, check is objects touch
@@ -317,7 +372,7 @@ function animator() {
             if (dist - target.radius - dart.radius < 1)
             {
                 // THE BIG BANG
-                for (let i = 0; i < target.radius * 2; i++)
+                for (let i = 0; i < target.radius; i++)
                 {
                     PARTICLES.push(
                         new Particle(dart.x, dart.y, target.color, Math.random() * 2,  {
@@ -332,6 +387,7 @@ function animator() {
                 {
                     SCORE += 100
                     score.innerHTML = SCORE
+                    let volume = 0.01 * target.radius + 0.5
 
                     // Green Sock Animation
                     gsap.to(target, {
@@ -342,20 +398,24 @@ function animator() {
                     }, 0)
 
                     // Enemy damage sound affect
-                    sounder('music/hit.mp3', 0.8)
+                    sounder('music/hit.mp3', 0.9 )
 
                 } else {
 
                     SCORE += 250
                     score.innerHTML = SCORE
+
+                    // Enemy destruction sound affect
+                    TARGETS[Tndx].colossal ? sounder('music/bom.mp3') : sounder('music/pop.mp3')
+
                     // setTimeout waits until the next frame to perform changes
+                    // Enemy explode sound affect
                     setTimeout(() => {
                         TARGETS.splice(Tndx, 1)
                         DARTS.splice(Dndx, 1)
                     }, 0)
 
-                    // Enemy explode sound affect
-                    sounder('music/pop.mp3', 0.9)
+
                 }
 
 
@@ -376,7 +436,7 @@ function Normal() {
     // event contains mouse click information
     addEventListener('click', (event) => {
         // Get the angle of the projectile
-        if (!PAUSED)
+        if (!PAUSED && GAME0N)
         {
             const angle = Math.atan2(event.clientY - canvas.height / 2 , event.clientX - canvas.width / 2)
             const velocity = {
@@ -445,15 +505,18 @@ let PAUSED = false
 function pausePlay() {
     // Toggle the PAUSED flag when the sound control button is clicked
     gameControl.addEventListener('click', () => {
-        PAUSED = !PAUSED
-        if (PAUSED) {
-            // If paused, cancel the animation frame
-            cancelAnimationFrame(animeID)
-            gameControl.style.backgroundImage = 'url(ico/playn.png)'
-        } else {
-            // If unpaused, resume animation
-            animeID = requestAnimationFrame(animator)
-            gameControl.style.backgroundImage = 'url(ico/pausen.png)'
+        if (GAME0N)
+        {
+            PAUSED = !PAUSED
+            if (PAUSED) {
+                // If paused, cancel the animation frame
+                cancelAnimationFrame(animeID)
+                gameControl.style.backgroundImage = 'url(ico/playn.png)'
+            } else {
+                // If unpaused, resume animation
+                animeID = requestAnimationFrame(animator)
+                gameControl.style.backgroundImage = 'url(ico/pausen.png)'
+            }
         }
     })
 }
@@ -467,11 +530,13 @@ startGameBtm.addEventListener('click', () => {
 
     sounder('music/play.mp3')
 
+
     // play background music
     setTimeout(() => {
         // Background Music
         musiker()
         pausePlay()
+        col()
         // Drive type
         Normal()
         //Overdrive()
