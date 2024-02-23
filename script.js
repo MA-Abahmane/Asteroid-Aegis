@@ -30,6 +30,7 @@ class Player {
         this.y = y
         this.color = color
         this.radius = radius
+        this.sfrRadius = 0
     }
     draw() {
         c.beginPath()
@@ -38,6 +39,13 @@ class Player {
         // draw player in color
         c.fillStyle = this.color
         c.fill()
+
+        c.beginPath();
+        // Outer circle
+        c.arc(this.x, this.y, this.sfrRadius, 0, Math.PI * 2, false)
+        c.lineWidth = 4
+        c.strokeStyle = this.color
+        c.stroke()
     }
 }
 
@@ -86,11 +94,11 @@ class Targets {
         c.fillStyle = this.color
         c.fill()
     }
-    update() {
+    update(div=1) {
         // Update Projectile position by velocity
         this.draw()
-        this.x += this.vel.x
-        this.y += this.vel.y
+        this.x += this.vel.x / div
+        this.y += this.vel.y / div
     }
 }
 
@@ -202,11 +210,10 @@ function musiker()
 }
 
 
-/// player creation
-let player = new Player(innerWidth / 2, innerHeight / 2, 'royalblue', 50)
-
-///
+/// Is the Game On?
 let GAME0N = false
+/// player creation
+let player = new Player(innerWidth / 2, innerHeight / 2, 'crimson', 40)
 /// Projectiles list
 let DARTS = []
 /// Enemies list
@@ -225,7 +232,7 @@ function init()
     c.clearRect(0, 0, canvas.width, canvas.height)
 
     /// player creation
-    player = new Player(innerWidth / 2, innerHeight / 2, 'royalblue', 50)
+    player = new Player(innerWidth / 2, innerHeight / 2, 'crimson', 40)
 
     /// Projectiles list
     DARTS = []
@@ -294,23 +301,29 @@ function spawnTargets() {
             }
 
         }
-    }, 1400)
+    }, 1200)
 }
 
-/// Player Chameleon Mode
-function col() {
-    // Green Sock Animation
+/// chameleon MODE; Make player change colors like a chameleon
+function chameleon() {
     let n = 0
+    // go trough the color wheel
     setInterval(() => {
         if (!PAUSED && GAME0N)
         {
+            // Green Sock Animation
             gsap.to(player, {
-                color: `hsl(${n}, 55%, 55%)`
+                color: `hsl(${n}, 58%, 55%)`
             })
+            gsap.to(player, {
+                sfrRadius: 100
+            })
+            console.log(n);
             n += 2
         }
     }, 1000)
 }
+
 
 //-/ Animation GAME LOOP \-\\
 let animeID
@@ -328,7 +341,7 @@ function animator() {
 
     // Draw Particles
     PARTICLES.forEach((particle, Pndx) => {
-        // Particle disappear
+        // Particle clear
         if (particle.opacity <= 0) {
             PARTICLES.splice(Pndx, 1)
         } else {
@@ -348,12 +361,18 @@ function animator() {
             }, 0)
         }
     })
+
     // Draw and update each Targets in the Targets list
     TARGETS.forEach((target, Tndx) => {
-        target.update()
+        const dist = Math.hypot(player.x - target.x, player.y - target.y)
+        
+        //\ SPHERE Activation; slow down when in range /\\
+        if (dist - target.radius - player.sfrRadius < 1)
+            target.update(3)
+        else
+            target.update()
 
         //| GAME OVER |\\
-        const dist = Math.hypot(player.x - target.x, player.y - target.y)
         if (dist - target.radius - player.radius < 1)
         {
             music.pause()
@@ -526,6 +545,7 @@ startGameBtm.addEventListener('click', () => {
     startGameBrd.style.display = 'none'
     init()
     animator()
+    chameleon()
     spawnTargets()
 
     sounder('music/play.mp3')
@@ -536,7 +556,6 @@ startGameBtm.addEventListener('click', () => {
         // Background Music
         musiker()
         pausePlay()
-        col()
         // Drive type
         Normal()
         //Overdrive()
