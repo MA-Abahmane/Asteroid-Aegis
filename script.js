@@ -21,6 +21,12 @@ const soundControl = document.querySelector('#soundControl')
 const gameControl = document.querySelector('#gameControl')
 
 
+let contain2 = document.querySelector('.contain2')
+let outer = document.querySelector('.outer')
+let inner = document.querySelector('.inner')
+let percentage = document.querySelector('span')
+
+
 //|\\ CLASS declarations //|\\
 /// Player class [User Base Character]
 class Player {
@@ -174,6 +180,8 @@ function sounder(path, vol=1)
 let music
 let soundOn = true
 let musicOn = true
+let _music
+let _sound
 function musiker()
 {
     // Play random background music
@@ -183,9 +191,11 @@ function musiker()
     music.loop = true
     music.volume = 0.9
     music.play()
+    musicOn = true
+    musicControl.style.backgroundImage = 'url(ico/mm.png)'
 
     // Play or Pause music on music button click
-    musicControl.addEventListener('click', () => {
+    musicControl.addEventListener('click', _music = () => {
         if (musicOn)
         {
             music.pause()
@@ -198,7 +208,7 @@ function musiker()
     })
 
     // Play or Pause music on music button click
-    soundControl.addEventListener('click', () => {
+    soundControl.addEventListener('click', _sound = () => {
         if (soundOn)
         {
             soundControl.style.backgroundImage = 'url(ico/nnn.png)'
@@ -210,28 +220,27 @@ function musiker()
 }
 
 
+/// player var
+let player
 /// Is the Game On?
-let GAME0N = false
-/// player creation
-let player = new Player(innerWidth / 2, innerHeight / 2, 'crimson', 40)
+let GAME0N = true
 /// Projectiles list
 let DARTS = []
 /// Enemies list
 let TARGETS = []
 /// Particles list
 let PARTICLES = []
+/// intervals list
+let intervalIDs = [];
 
-//['#8f83d8', '#d69cbc', '#51074a', '#56bf52', '#437a37',
-//'#b9cefb', '#660000', '#e7c459', '#371f30', '#fff49f',
-//'#d89eff', '#fff49f', '#2d2c4e', '#ff8c8c', '#dc143c']
 
 /// RESTART GAME
 function init()
 {
-    GAME0N = true
     c.clearRect(0, 0, canvas.width, canvas.height)
 
     /// player creation
+    GAME0N = true
     player = new Player(innerWidth / 2, innerHeight / 2, 'crimson', 40)
 
     /// Projectiles list
@@ -242,7 +251,12 @@ function init()
     PARTICLES = []
 
     //\\ This line was added due to Canvas having replay performance issues
-    if (SCORE > 0) location.reload()
+    //if (!GAME0N) location.reload()
+
+    // Iterate over the array of interval IDs and clear each interval
+    intervalIDs.forEach(intervalID => clearInterval(intervalID));
+    // Clear the array
+    intervalIDs = [];
 
     // reset score
     SCORE = 0
@@ -253,8 +267,8 @@ function init()
 /// SPAWN Targets
 let timer = 0
 function spawnTargets() {
-    // make a call each 1500 millisecond
-    setInterval(() => {
+    // SetInterval; make a call each 1500 millisecond
+    let id = setInterval(() => {
         if (!PAUSED && GAME0N)
         {
             //# Random Target size
@@ -302,13 +316,15 @@ function spawnTargets() {
 
         }
     }, 1200)
+    // save interval id
+    intervalIDs.push(id)
 }
 
-/// chameleon MODE; Make player change colors like a chameleon
+/// Chameleon MODE; Make player change colors like a chameleon
 function chameleon() {
     let n = 0
     // go trough the color wheel
-    setInterval(() => {
+    let id = setInterval(() => {
         if (!PAUSED && GAME0N)
         {
             // Green Sock Animation
@@ -318,10 +334,10 @@ function chameleon() {
             gsap.to(player, {
                 sfrRadius: 100
             })
-            console.log(n);
             n += 2
         }
     }, 1000)
+    intervalIDs.push(id)
 }
 
 
@@ -365,7 +381,7 @@ function animator() {
     // Draw and update each Targets in the Targets list
     TARGETS.forEach((target, Tndx) => {
         const dist = Math.hypot(player.x - target.x, player.y - target.y)
-        
+
         //\ SPHERE Activation; slow down when in range /\\
         if (dist - target.radius - player.sfrRadius < 1)
             target.update(3)
@@ -375,12 +391,18 @@ function animator() {
         //| GAME OVER |\\
         if (dist - target.radius - player.radius < 1)
         {
+            GAME0N = false
             music.pause()
             sounder('music/game.mp3')
+
             cancelAnimationFrame(animeID)
+            removeEventListener('click', _shooter)
+            musicControl.removeEventListener('click', _music)
+            soundControl.removeEventListener('click', _sound)
+            gameControl.removeEventListener('click', _pauser)
+
             startGameBrd.style.display = 'flex'
             scoreBrd.innerHTML = SCORE
-            GAME0N = false
 
         }
         // Compare distances, check is objects touch
@@ -437,7 +459,6 @@ function animator() {
 
                 }
 
-
             }
         })
     })
@@ -450,25 +471,26 @@ function animator() {
 
 /// NORMAL MODE: In this mode, Projectiles are shot for each mouse click
 // listen for mouse clicks
+let _shooter
 function Normal() {
     // listen for mouse clicks
     // event contains mouse click information
-    addEventListener('click', (event) => {
+    addEventListener('click', _shooter = (event) => {
         // Get the angle of the projectile
-        if (!PAUSED && GAME0N)
+        if (!PAUSED)
         {
             const angle = Math.atan2(event.clientY - canvas.height / 2 , event.clientX - canvas.width / 2)
             const velocity = {
             x: Math.cos(angle),
             y: Math.sin(angle)
         }
-        // Projectile creation (on click)
-        DARTS.push(new Dart(
-            canvas.width / 2,
-            canvas.height / 2,
-            'white',
-            5,
-            velocity
+            // Projectile creation (on click)
+            DARTS.push(new Dart(
+                canvas.width / 2,
+                canvas.height / 2,
+                'white',
+                5,
+                velocity
             ))
 
             sounder('music/shot.mp3', 0.6)
@@ -489,7 +511,6 @@ function Overdrive()
             x: Math.cos(angle),
             y: Math.sin(angle)
         }
-
         // Projectile creation
         DARTS.push(new Dart(
             canvas.width / 2,
@@ -499,15 +520,12 @@ function Overdrive()
             velocity
         ))
     }
-
     //const createProjectileThrottled = _.throttle(createProjectile, 100)
-
     // Listen for mouse down event
     addEventListener('mousedown', (event) => {
         isMouseDown = true
         createProjectile(event)
     })
-
     // Listen for mouse move event
     addEventListener('mousemove', (event) => {
         createProjectile(event)
@@ -521,9 +539,10 @@ function Overdrive()
 
 // Game PAUSING ||<| \\
 let PAUSED = false
+let _pauser
 function pausePlay() {
     // Toggle the PAUSED flag when the sound control button is clicked
-    gameControl.addEventListener('click', () => {
+    gameControl.addEventListener('click', _pauser = () => {
         if (GAME0N)
         {
             PAUSED = !PAUSED
@@ -540,6 +559,30 @@ function pausePlay() {
     })
 }
 
+/// LOAD GAME \\\
+let count = 0;
+inner.addEventListener('click', loader = () => {
+    let id = setInterval(() => {
+        if (GAME0N)
+        {
+            if (count == 100) {
+                outer.classList.remove('active-loader')
+                outer.classList.add('active-loader2')
+                clearInterval()
+                contain2.style.opacity = 0
+                contain2.style.display = 'none'
+                contain2.removeEventListener('click', loader)
+            } else {
+                count++
+                percentage.textContent = count + '%'
+                outer.classList.add('active-loader')
+            }
+        }
+    }, 80)
+    intervalIDs.push(id)
+})
+
+
 /// START GAME \\\
 startGameBtm.addEventListener('click', () => {
     startGameBrd.style.display = 'none'
@@ -549,14 +592,14 @@ startGameBtm.addEventListener('click', () => {
     spawnTargets()
 
     sounder('music/play.mp3')
-
-
+    
     // play background music
     setTimeout(() => {
         // Background Music
         musiker()
         pausePlay()
-        // Drive type
+
+        // Drive type \\
         Normal()
         //Overdrive()
     }, 700)
