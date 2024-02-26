@@ -286,12 +286,25 @@ function init()
     alwPower1 = true
     alwPower2 = false
     alwPower3 = false
-    power2.style.opacity = 1
+    activated2, activated3 = false
+    power1.style.opacity = 1
     power2.style.opacity = 0.5
     power3.style.opacity = 0.5
 
     //\\ This line was added due to Canvas having replay performance issues
     //if (!GAME0N) location.reload()
+
+    // Clear all setTimeout calls
+    let timeoutID = setTimeout(() => {});
+    while (timeoutID--) {
+        clearTimeout(timeoutID);
+    }
+
+    // Clear all setInterval calls
+    let intervalID = setInterval(() => {}, 0);
+    while (intervalID--) {
+        clearInterval(intervalID);
+    }
 
     // Iterate over the array of interval IDs and clear each interval
     intervalIDs.forEach(intervalID => clearInterval(intervalID));
@@ -307,9 +320,9 @@ function init()
 /// SPAWN Targets
 let timer = 0
 let spawnTargetsID
+let activated2, activated3 = false
 function spawnTargets() {
     // SetInterval; make a call each 1500 millisecond
-    let activated2, activated3 = false
     spawnTargetsID = setInterval(() => {
         if (!PAUSED && GAME0N)
         {
@@ -700,12 +713,17 @@ function pass() {
 
 function power_I() {
     if (alwPower1) 
-    {   
+    {
+        // Pause Target creation
         clearInterval(spawnTargetsID)
+
         gsap.to(player, {sfrRadius: 800, duration: 3, ease: "power1.inOut"});
         setTimeout(() => {
+            // Resume Target attacks
+            spawnTargets()
             gsap.to(player, {sfrRadius: 100, duration: 3, ease: "power1.inOut"});
         }, 20000)
+
 
         gsap.to(power1, { opacity: 0.5, duration: 0.5 });
         alwPower1 = false
@@ -714,7 +732,7 @@ function power_I() {
     setTimeout(() => {
         gsap.to(power1, { opacity: 1, duration: 0.5 });
         alwPower1 = true
-    }, 50000)
+    }, 100000)
 } 
 
 function power_II() {
@@ -737,7 +755,7 @@ function power_II() {
     setTimeout(() => {
         gsap.to(power2, { opacity: 1, duration: 0.5 });
         alwPower2 = true
-    }, 80000)
+    }, 100000)
 } 
 
 function power_III() {
@@ -748,7 +766,7 @@ function power_III() {
         setTimeout(() => {
             gsap.to(player, {sfrRadius: 100, duration: 2, ease: "power1.inOut"});
         }, 2500);
-        
+
         gsap.to(power3, { opacity: 0.5, duration: 0.5 });
         alwPower3 = false
     }
@@ -756,7 +774,7 @@ function power_III() {
     setTimeout(() => {
         gsap.to(power3, { opacity: 1, duration: 0.5 });
         alwPower3 = true
-    }, 50000)
+    }, 100000)
 
 }
 
