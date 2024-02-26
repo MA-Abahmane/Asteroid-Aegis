@@ -6,9 +6,6 @@
 :root {
     /* Disable ZOOM on phone */
     touch-action: pan-x pan-y; height: 100%;
-    /* Variables */
-    --music-off-logo: url(VisualVault/mmb.png);
-    --sound-off-logo: url(VisualVault/nnn.png);
 }
 
 body {
@@ -189,7 +186,7 @@ div[class^='layer'] {
     font-size: 60px;
     font-weight: 800;
     color: transparent;
-    font-family: myFont, system-ui, arial;
+    font-family: myFont, bitter, arial;
     background:  linear-gradient(135deg, #feed07 0%, #fe6a50 5%, #Ed00aa, #2fe3fe 50%, #8900ff 100%);
 
     -webkit-background-clip: text;
@@ -208,7 +205,7 @@ div[class^='layer'] {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-family: myFont, system-ui, arial;
+    font-family: myFont, bitter, arial;
     transition: transform 0s;
     scale: 1;
 }
@@ -263,7 +260,7 @@ div[class^='layer'] {
     align-items: center;
     justify-content: space-between;
     color: #2d1663;
-    font-family: myFont, system-ui, arial;
+    font-family: myFont, bitter, arial;
     user-select: none;
     scale: 1;
 }
@@ -298,21 +295,23 @@ div[class^='layer'] {
 /* Main Menu */
 .main {
     position: absolute;
-    top: 20px;
+    top: -200px;
     left: 0;
     right: 0;
     margin: auto;
+    padding: 0 20px;
     width: 350px;
     height: 50px;
-    background: white;
-    font-family: myFont, system-ui, arial;
+    font-family: myFont, bitter, arial;
     font-size: larger;
+    background: white;
     border-radius: 100px;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    padding: 0 20px;
     user-select: none;
+    
+    transition: 1s;
     z-index: 1;
 }
 
@@ -344,13 +343,13 @@ div[class^='layer'] {
 /* Width Scale*/
 @media (max-width: 850px) {
     ._container .inner, .outer, .processing {
-        scale: .7;
+        scale: .8;
     }
     .processing {
         top: 45%;
     }
     .alias-container {
-        scale: .7;
+        scale: .8;
     }
 }
 @media (max-width: 390px) {
