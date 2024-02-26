@@ -60,6 +60,7 @@ body {
     justify-content: center;
     background: white;
     border-radius: 50px;
+    user-select: none;
 
     transition: .5s ease;
 }

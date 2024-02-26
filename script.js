@@ -286,7 +286,8 @@ function init()
     alwPower1 = true
     alwPower2 = false
     alwPower3 = false
-    activated2, activated3 = false
+    activated2 = false
+    activated3 = false
     power1.style.opacity = 1
     power2.style.opacity = 0.5
     power3.style.opacity = 0.5
@@ -366,13 +367,16 @@ function spawnTargets() {
                 }
                 else
                     timer++
-            } else if (SCORE >= 2000 && !activated2) {
+            }
+            console.log(SCORE >= 2000, !activated2);
+            if (SCORE >= 2000 && !activated2) {
                 // Power UP 1 & 2 release
                 alwPower2 = true
                 activated2 = true
                 gsap.to(power2, { opacity: 1, duration: .5 });
                 console.log('on1');
-            } else if (SCORE >= 4000 && !activated3) {
+            } 
+            if (SCORE >= 4000 && !activated3) {
                 alwPower3 = true
                 activated3 = true
                 gsap.to(power3, { opacity: 1, duration: .5 });
