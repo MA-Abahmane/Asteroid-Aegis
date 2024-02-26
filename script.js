@@ -35,9 +35,10 @@ const p3 = document.querySelector('.p3')
 const layer4 = document.querySelector('.layer4')
 const layer5 = document.querySelector('.layer5')
 const layer6 = document.querySelector('.layer6')
-const save_btn = document.querySelector('#save-btn')
 const alias = document.querySelector('.alias')
+const save_btn = document.querySelector('#save-btn')
 
+const main = document.querySelector('.main')
 const power1 = document.querySelector('#power1')
 const power2 = document.querySelector('#power2')
 const power3 = document.querySelector('#power3')
@@ -206,17 +207,17 @@ function musiker()
     music.volume = 0.9
     music.play()
     musicOn = true
-    musicControl.style.backgroundImage = 'url(VisualVault/mm.png)'
+    musicControl.style.backgroundImage = 1
 
     // Play or Pause music on music button click
     musicControl.addEventListener('click', _music = () => {
         if (musicOn)
         {
             music.pause()
-            musicControl.style.backgroundImage = 'var(--music-off-logo)'
+            musicControl.style.opacity = 0.7
         } else {
             music.play()
-            musicControl.style.backgroundImage = 'url(VisualVault/mm.png)'
+            musicControl.style.opacity = 1
         }
         musicOn = !musicOn
     })
@@ -225,9 +226,9 @@ function musiker()
     soundControl.addEventListener('click', _sound = () => {
         if (soundOn)
         {
-            soundControl.style.backgroundImage = 'var(--sound-off-logo)'
+            soundControl.style.opacity = 0.7
         } else {
-            soundControl.style.backgroundImage = 'url(VisualVault/nn.png)'
+            soundControl.style.opacity = 1
         }
         soundOn = !soundOn
     })
@@ -252,8 +253,6 @@ let PARTICLES = []
 let alwPower1 = true
 let alwPower2 = false
 let alwPower3 = false
-/// intervals list
-let intervalIDs = []
 /// Event Listener function vars
 let _music
 let _sound
@@ -282,6 +281,7 @@ function init()
     TARGETS = []
     /// Dart and Target collision affect
     PARTICLES = []
+  
     /// Power UPs Allow
     alwPower1 = true
     alwPower2 = false
@@ -300,17 +300,11 @@ function init()
     while (timeoutID--) {
         clearTimeout(timeoutID);
     }
-
     // Clear all setInterval calls
     let intervalID = setInterval(() => {}, 0);
     while (intervalID--) {
         clearInterval(intervalID);
     }
-
-    // Iterate over the array of interval IDs and clear each interval
-    intervalIDs.forEach(intervalID => clearInterval(intervalID));
-    // Clear the array
-    intervalIDs = [];
 
     // reset score
     SCORE = 0
@@ -368,47 +362,21 @@ function spawnTargets() {
                 else
                     timer++
             }
-            console.log(SCORE >= 2000, !activated2);
-            if (SCORE >= 2000 && !activated2) {
+            if (SCORE >= 2500 && !activated2) {
                 // Power UP 1 & 2 release
                 alwPower2 = true
                 activated2 = true
-                gsap.to(power2, { opacity: 1, duration: .5 });
-                console.log('on1');
+                gsap.to(power2, { opacity: 1, duration: .5 })
             } 
-            if (SCORE >= 4000 && !activated3) {
+            if (SCORE >= 4500 && !activated3) {
                 alwPower3 = true
                 activated3 = true
-                gsap.to(power3, { opacity: 1, duration: .5 });
-                console.log('on2');
+                gsap.to(power3, { opacity: 1, duration: .5 })
             }
         }
     }, 1200)
-    // save interval id for later clear
-    intervalIDs.push(spawnTargetsID)
 }
 
-/// Chameleon MODE; Make player change colors like a chameleon
-function chameleon() {
-    let n = 0
-    // go trough the color wheel
-    const id = setInterval(() => {
-        if (!PAUSED && GAME0N)
-        {
-            // Green Sock Animation
-            gsap.to(player, {
-                color: `hsl(${n}, 58%, 55%)`
-            })
-            n += 2
-        }
-    }, 1000)
-    // save interval id
-    intervalIDs.push(id)
-
-    // set up player sphere
-    gsap.to(player, { sfrRadius: 100 })
-
-}
 
 
 //-/ Animation GAME LOOP \-\\
@@ -538,17 +506,37 @@ function animator() {
 }
 
 
+/// Chameleon MODE; Make player change colors like a chameleon
+function chameleon() {
+    let n = 0
+    // go trough the color wheel
+    const id = setInterval(() => {
+        if (!PAUSED && GAME0N)
+        {
+            // Green Sock Animation
+            gsap.to(player, {
+                color: `hsl(${n}, 58%, 55%)`
+            })
+            n += 2
+        }
+    }, 1000)
+
+    // set up player sphere
+    gsap.to(player, { sfrRadius: 100 })
+
+}
+
+
 /// InGame Click Management \\\
 
 /// NORMAL MODE: In this mode, Projectiles are shot for each mouse click
 // listen for mouse clicks
-let dSize = 5
 function Normal() {
     // listen for mouse clicks
     // event contains mouse click information
     addEventListener('click', _shooter = (event) => {
         // Get the angle of the projectile
-        if (!PAUSED)
+        if (!PAUSED && GAME0N)
         {
             const angle = Math.atan2(event.clientY - canvas.height / 2 , event.clientX - canvas.width / 2)
             const velocity = {
@@ -560,7 +548,7 @@ function Normal() {
                 canvas.width / 2,
                 canvas.height / 2,
                 'white',
-                dSize,
+                5,
                 velocity
             ))
 
@@ -630,6 +618,103 @@ function pausePlay() {
 }
 
 
+/// Get User Alias
+function setAlias() {
+    let input = document.querySelector('#text-box').value;
+    if (input.length > 0) {
+        USERNAME = input
+        pass()
+    }
+}
+function pass() {
+    alias.innerHTML = USERNAME
+    layer6.style.left = '100%'
+    layer5.style.left = '100%'
+    layer4.style.left = '100%'
+
+    setTimeout(() => {
+        layer6.style.display = 'none'
+        layer5.style.display = 'none'
+        layer4.style.display = 'none'
+    }, 3000)
+}
+
+
+//\ Game Power Ups /\\
+function power_I() {
+    if (alwPower1 && GAME0N && !PAUSED) 
+    {   
+        sounder('TuneBox/ultra-field.mp3', 0.9)
+        // Pause Target creation
+        clearInterval(spawnTargetsID)
+
+        gsap.to(player, {sfrRadius: 800, duration: 5, ease: "power1.inOut"});
+        setTimeout(() => {
+            // Resume Target attacks
+            spawnTargets()
+            gsap.to(player, {sfrRadius: 100, duration: 3, ease: "power1.inOut"});
+        }, 20000)
+
+
+        gsap.to(power1, { opacity: 0.5, duration: 0.5 });
+        alwPower1 = false
+    }
+
+    setTimeout(() => {
+        gsap.to(power1, { opacity: 1, duration: 0.5 });
+        alwPower1 = true
+    }, 120000)
+}
+
+function power_II() {
+    if (alwPower2 && GAME0N && !PAUSED) 
+    {
+
+        sounder('TuneBox/giga-shot.mp3', 0.9)
+        removeEventListener('click', _shooter)
+        Overdrive()
+
+        setTimeout(() => {
+            removeEventListener('mousedown', _mousedown)
+            removeEventListener('mousemove', _mousemove)
+            removeEventListener('mouseup', _mouseup)
+            Normal()
+        }, 20000)
+
+        gsap.to(power2, { opacity: 0.5, duration: 0.5 });
+        alwPower2 = false
+    }
+
+    setTimeout(() => {
+        gsap.to(power2, { opacity: 1, duration: 0.5 });
+        alwPower2 = true
+    }, 120000)
+} 
+
+function power_III() {
+    if (alwPower3 && GAME0N && !PAUSED)
+    {   
+        sounder('TuneBox/doomswave.mp3')
+
+        gsap.to(player, {sfrRadius: 1200, duration: 1, ease: "power1.inOut"});
+        TARGETS = [];
+        setTimeout(() => {
+            gsap.to(player, {sfrRadius: 100, duration: 2, ease: "power1.inOut"});
+        }, 2500);
+
+        gsap.to(power3, { opacity: 0.5, duration: 0.5 });
+        alwPower3 = false
+    }
+
+    setTimeout(() => {
+        gsap.to(power3, { opacity: 1, duration: 0.5 });
+        alwPower3 = true
+    }, 120000)
+}
+
+
+
+
 ///\ LOAD GAME /\\\
 let count = 0;
 inner.addEventListener('click', loader = () => {
@@ -692,107 +777,21 @@ inner.addEventListener('click', loader = () => {
     }, 2000)
 })
 
-
-function setAlias() {
-    let input = document.querySelector('#text-box').value;
-    if (input.length > 0) {
-        USERNAME = input
-        pass()
-    }
-}
-
-function pass() {
-    alias.innerHTML = USERNAME
-    layer6.style.left = '100%'
-    layer5.style.left = '100%'
-    layer4.style.left = '100%'
-
-    setTimeout(() => {
-        layer6.style.display = 'none'
-        layer5.style.display = 'none'
-        layer4.style.display = 'none'
-    }, 3000)
-}
-
-
-function power_I() {
-    if (alwPower1) 
-    {
-        // Pause Target creation
-        clearInterval(spawnTargetsID)
-
-        gsap.to(player, {sfrRadius: 800, duration: 3, ease: "power1.inOut"});
-        setTimeout(() => {
-            // Resume Target attacks
-            spawnTargets()
-            gsap.to(player, {sfrRadius: 100, duration: 3, ease: "power1.inOut"});
-        }, 20000)
-
-
-        gsap.to(power1, { opacity: 0.5, duration: 0.5 });
-        alwPower1 = false
-    }
-
-    setTimeout(() => {
-        gsap.to(power1, { opacity: 1, duration: 0.5 });
-        alwPower1 = true
-    }, 100000)
-} 
-
-function power_II() {
-    if (alwPower2) 
-    {
-        removeEventListener('click', _shooter)
-        Overdrive()
-
-        setTimeout(() => {
-            removeEventListener('mousedown', _mousedown)
-            removeEventListener('mousemove', _mousemove)
-            removeEventListener('mouseup', _mouseup)
-            Normal()
-        }, 20000)
-
-        gsap.to(power2, { opacity: 0.5, duration: 0.5 });
-        alwPower2 = false
-    }
-
-    setTimeout(() => {
-        gsap.to(power2, { opacity: 1, duration: 0.5 });
-        alwPower2 = true
-    }, 100000)
-} 
-
-function power_III() {
-    if (alwPower3) 
-    {
-        gsap.to(player, {sfrRadius: 1200, duration: 1, ease: "power1.inOut"});
-        TARGETS = [];
-        setTimeout(() => {
-            gsap.to(player, {sfrRadius: 100, duration: 2, ease: "power1.inOut"});
-        }, 2500);
-
-        gsap.to(power3, { opacity: 0.5, duration: 0.5 });
-        alwPower3 = false
-    }
-
-    setTimeout(() => {
-        gsap.to(power3, { opacity: 1, duration: 0.5 });
-        alwPower3 = true
-    }, 100000)
-
-}
-
-
 /// START GAME \\\
 startGameBtm.addEventListener('click', () => {
     startGameBrd.style.display = 'none'
+    // Main Game Menu Display
+    if (innerWidth > 550)
+        gsap.to(main, { top: '20px', duration: .8, ease: "power1.inOut"})
+    else
+        gsap.to(main, { top: '90%', duration: .8, ease: "power1.inOut"})
+
     init()
     animator()
     chameleon()
     spawnTargets()
 
     sounder('TuneBox/play.mp3')
-
 
     // play background music
     setTimeout(() => {
