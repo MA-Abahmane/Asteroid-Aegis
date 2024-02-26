@@ -24,6 +24,7 @@ Asteroid Aegis is an exciting HTML5 game where you defend your base from incomin
 * **Endless Gameplay:** Survive as long as possible against increasingly difficult waves of asteroids.
 * **Power-ups:** Discover various power-ups scattered throughout the game that enhance your base's abilities, provide temporary advantages, or unleash devastating attacks on incoming asteroids.
 * **High-Quality Graphics:** Enjoy stunning visuals with high-quality graphics that bring the game world to life, including detailed backgrounds, dynamic animations, and vibrant special effects.
+* **Cross-Platform Compatibility:** Play the game on any device, including PC, laptop, tablet, and phone, for seamless gaming experience across different platforms.
 * **High Score Tracking:** Compete with friends and other players to achieve the highest score and earn bragging rights.
 
 <h2 id='getting-started'>Getting Started</h2>
