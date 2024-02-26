@@ -265,7 +265,7 @@ let _mouseup
 
 /// RESTART GAME
 function init()
-{   
+{
     // clear and set canvas size
     canvas.width = innerWidth
     canvas.height = innerHeight
@@ -281,7 +281,7 @@ function init()
     TARGETS = []
     /// Dart and Target collision affect
     PARTICLES = []
-  
+
     /// Power UPs Allow
     alwPower1 = true
     alwPower2 = false
@@ -367,7 +367,7 @@ function spawnTargets() {
                 alwPower2 = true
                 activated2 = true
                 gsap.to(power2, { opacity: 1, duration: .5 })
-            } 
+            }
             if (SCORE >= 4500 && !activated3) {
                 alwPower3 = true
                 activated3 = true
@@ -642,8 +642,8 @@ function pass() {
 
 //\ Game Power Ups /\\
 function power_I() {
-    if (alwPower1 && GAME0N && !PAUSED) 
-    {   
+    if (alwPower1 && GAME0N && !PAUSED)
+    {
         sounder('TuneBox/ultra-field.mp3', 0.9)
         // Pause Target creation
         clearInterval(spawnTargetsID)
@@ -667,7 +667,7 @@ function power_I() {
 }
 
 function power_II() {
-    if (alwPower2 && GAME0N && !PAUSED) 
+    if (alwPower2 && GAME0N && !PAUSED)
     {
 
         sounder('TuneBox/giga-shot.mp3', 0.9)
@@ -689,11 +689,11 @@ function power_II() {
         gsap.to(power2, { opacity: 1, duration: 0.5 });
         alwPower2 = true
     }, 120000)
-} 
+}
 
 function power_III() {
     if (alwPower3 && GAME0N && !PAUSED)
-    {   
+    {
         sounder('TuneBox/doomswave.mp3')
 
         gsap.to(player, {sfrRadius: 1200, duration: 1, ease: "power1.inOut"});
@@ -759,7 +759,7 @@ inner.addEventListener('click', loader = () => {
                     outer.classList.add('active-loader')
                 }
             }
-        }, 5) // < Loading speed
+        }, 75) // < Loading speed
 
          /* Process appear one by one */
         const ls = [p1, p2, p3];
