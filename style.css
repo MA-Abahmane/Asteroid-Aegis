@@ -3,7 +3,13 @@
     src: url("Bitter-ExtraBold.ttf") format("opentype");
 }
 
-:root { touch-action: pan-x pan-y; height: 100%; }
+:root {
+    /* Disable ZOOM on phone */
+    touch-action: pan-x pan-y; height: 100%;
+    /* Variables */
+    --music-off-logo: url(VisualVault/mmb.png);
+    --sound-off-logo: url(VisualVault/nnn.png);
+}
 
 body {
     margin: 0;
@@ -11,7 +17,9 @@ body {
     background: black;
 }
 
-.contain {
+
+/*/ Dropdown game controls menu  /*/
+.__container {
     width: 70px;
     height: 270px;
     position: absolute;
@@ -26,13 +34,12 @@ body {
     transition: top .5s ease;
     z-index: 0;
 }
-.contain:hover {
-    top: 10;
+.__container:hover {
+    top: 10px;
 }
-.contain:hover .menuButton {
+.__container:hover .menuButton {
     transform: rotate(180deg);
 }
-
 
 .menu {
     width: 50px;
@@ -58,44 +65,68 @@ body {
 }
 
 
-/* Button images */
+/* Menu Button images */
 #musicControl {
     width: 42px;
     height: 42px;
     background-size: contain;
-    background-image: url(ico/mm.png);
+    background-image: url(VisualVault/mm.png);
 
     transition: .5s;
-}
-#musicControl:hover {
-    opacity: 0.85;
 }
 
 #soundControl {
     width: 42px;
     height: 42px;
     background-size: contain;
-    background-image: url(ico/nn.png);
+    background-image: url(VisualVault/nn.png);
 
     transition: .5s;
-}
-#soundControl:hover {
-    opacity: 0.85;
 }
 
 #gameControl {
     width: 44px;
     height: 44px;
     background-size: contain;
-    background-image: url(ico/pausen.png);
+    background-image: url(VisualVault/pausen.png);
 
     transition: .2s;
 }
-#gameControl:hover {
+
+#musicControl, #soundControl, #gameControl:hover {
     opacity: 0.85;
 }
 
-.contain2 {
+
+/*/ Under animation layers /*/
+div[class^='layer'] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.layer1 {
+    background-color: #2fe3fe;
+    transition: 1.30s ease-in-out;
+    z-index: 4;
+}
+
+.layer2 {
+    background-color:#Ed00aa;
+    transition: 1.15s ease-in-out;
+    z-index: 5;
+}
+
+/*/ Game Percentage Loading circle /*/
+.layer3 {
+    background-color:#240f52;
+    transition: 1s ease-in-out;
+    z-index: 6;
+}
+
+._container {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -104,12 +135,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: myFont ;
-    background: #240f52;
     overflow: hidden;
-    z-index: 1;
-
-    transition: 2s;
+    transition: 1s ease-in-out;
+    z-index: 7;
 }
 
 .outer {
@@ -117,6 +145,8 @@ body {
     width: 300px;
     background: linear-gradient(135deg, #feed07 0%, #fe6a50 5%, #Ed00aa, #2fe3fe 50%, #8900ff 100%);
     border-radius: 50%;
+    margin-top: -70px;
+    scale: 1;
 }
 
 .outer.active-loader {
@@ -132,7 +162,6 @@ body {
     to { transform: rotate(360deg); }
 }
 
-
 .inner {
     position: absolute;
     width: 275px;
@@ -141,18 +170,218 @@ body {
     line-height: 275px;
     background: #240f52;
     border-radius: 50%;
-    margin-top: 1px;
+    margin-top: -69px;
+    user-select: none;
     cursor: default;
-}
+    box-shadow: 0 0 5px #240f52;
+    scale: 1;
 
+    transition: .2s;
+    z-index: 7;
+}
+.inner:hover {
+    background: #2d1663;
+    cursor: pointer;
+}
 
 .inner span {
     font-size: 60px;
     font-weight: 800;
     color: transparent;
+    font-family: myFont, system-ui, arial;
     background:  linear-gradient(135deg, #feed07 0%, #fe6a50 5%, #Ed00aa, #2fe3fe 50%, #8900ff 100%);
-    
+
     -webkit-background-clip: text;
     background-size: 300%;
-
 }
+
+
+/*/ Process display board /*/
+.processing {
+    position: absolute;
+    width: 400px;
+    height: 450px;
+    margin: 0;
+    top: 55%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: myFont, system-ui, arial;
+    transition: transform 0s;
+    scale: 1;
+}
+
+.processing .p1, .p2, .p3 {
+    width: 400px;
+    height: 80px;
+    font-size: 17px;
+    color: #2fe3fe;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+    transition: transform 0s;
+    opacity: 0;
+    scale: 1;
+}
+
+
+.layer4 {
+    background-color: #240f52;
+    transition: 1.30s ease-in-out;
+    z-index: 1;
+}
+.layer5 {
+    background-color: #2afda1;
+    transition: 1.15s ease-in-out;
+    z-index: 2;
+}
+
+.layer6 {
+    background-color: #5010e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: 1s ease-in-out;
+    z-index: 3;
+}
+
+.alias-container {
+    width: 500px;
+    height: 200px;
+    padding: 20px;
+    font-size: large;
+    padding-bottom: 10px;
+    border-radius: 15px;
+    background: white;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    color: #2d1663;
+    font-family: myFont, system-ui, arial;
+    user-select: none;
+    scale: 1;
+}
+
+#text-box {
+    width: 450px;
+    height: 50px;
+    border-radius: 10px;
+    font-size: larger;
+    text-align: center;
+    background-color: #e6e6e6;
+    border: 2px solid #240f52;
+}
+#text-box:focus {
+    outline-color: #5010e5;
+}
+
+.alias-container button {
+    width: 100px;
+    height: 40px;
+    margin: auto;
+    border-radius: 100px;
+    background: #feed07;
+}
+.alias-container button:first-of-type {
+    background: #fa178c;
+}
+.alias-container button:first-of-type + button {
+    background: #2afda1;
+}
+
+/* Main Menu */
+.main {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 350px;
+    height: 50px;
+    background: white;
+    font-family: myFont, system-ui, arial;
+    font-size: larger;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 0 20px;
+    user-select: none;
+    z-index: 1;
+}
+
+#power1 {
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-image: url(VisualVault/oo.png);
+}
+
+#power2 {
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-image: url(VisualVault/ss.png);
+    opacity: 0.5;
+}
+
+#power3 {
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-image: url(VisualVault/kk.png);
+    opacity: 0.5;
+}
+
+
+
+/* Width Scale*/
+@media (max-width: 850px) {
+    ._container .inner, .outer, .processing {
+        scale: .7;
+    }
+    .processing {
+        top: 45%;
+    }
+    .alias-container {
+        scale: .7;
+    }
+}
+@media (max-width: 390px) {
+    ._container .inner, .outer, .processing {
+        scale: .5;
+    }
+    .processing {
+        top: 38%;
+    }
+    .alias-container {
+        scale: .5;
+    }
+}
+@media (max-width: 305px) {
+    ._container .inner, .outer, .processing {
+        scale: .4;
+    }
+    .alias-container {
+        scale: .4;
+    }
+}
+
+/* Height Scale*/
+@media (max-height: 770px) {
+    ._container .inner, .outer, .processing {
+        scale: .5;
+    }
+    .processing {
+        top: 38%; 
+    }
+    .alias-container {
+        scale: .5;
+    }
+}
+

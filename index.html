@@ -3,28 +3,59 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="style.css">
+        <meta name="description" content="Asteroid Aegis - An exciting HTML5 game where you defend your base from incoming asteroids.">
+        <meta name="keywords" content="Asteroid Aegis, game, HTML5, space, asteroids, defend, action, shooter">
+        <link rel="stylesheet" href="style.css" fetchpriority="high">
         <title>Asteroid Aegis</title>
         <!-- tailwindcss CSS Framework and CSS file -->
         <script src="tailwindcss.js"></script>
         <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     </head>
     <body>
-        <div class="contain2">
-            <div class="outer"></div>
-            <div class="inner">
-                <span>Start</span>
+        <div class="layer1"></div>
+        <div class="layer2"></div>
+        <div class="layer3">
+            <div class="_container">
+                <div class="outer"></div>
+                <div class="inner">
+                    <span>Start</span>
+                </div>
+                <div class="processing">
+                    <div class="p1">Unwrapping Magic</div>
+                    <div class="p2">Breathing Life into Logic</div>
+                    <div class="p3">Initializing Environment</div>
+                </div>
             </div>
         </div>
 
-        <div class="contain">
+        <div class="layer4"></div>
+        <div class="layer5"></div>
+        <div class="layer6">
+            <form class="alias-container" onsubmit="return false;">
+                <div class="input">
+                    <label for="text-box"> USERNAME: </label>
+                    <input id="text-box" type="text" name="text-box" minlength="1" maxlength="10" required autofocus>
+                </div>
+                <button id="pass-btn" onclick="pass()"> Pass </button>
+                <button id="save-btn" onclick="setAlias()"> Save </button>
+            </form>
+        </div>
+
+        <div class="main">
+            <div class="alias"></div>
+            <button type="button" onclick="power_I()" id="power1" title="Ultra-Field"></button>
+            <button type="button" onclick="power_II()" id="power2" title="Giga-Shot"></button>
+            <button type="button" onclick="power_III()" id="power3" title="Doomswave"></button>
+        </div>
+
+        <div class="__container">
             <div class="menu">
-                <button type="button" id="musicControl"> </button>
-                <button type="button" id="soundControl">  </button>
-                <button type="button" id="gameControl">  </button>
+                <button type="button" id="musicControl" title="Music ON/OFF"></button>
+                <button type="button" id="soundControl" title="Sound ON/OFF"></button>
+                <button type="button" id="gameControl" title="Game Pause/Play"></button>
             </div>
             <div class="menuButton">
-                <button type="button" id="menuButton"> <img class="w-8" src="ico/bb.png" alt="sound"> </button>
+                <button type="button" id="menuButton"> <img class="w-8" src="VisualVault/bb.png" alt="sound"> </button>
             </div>
         </div>
 
@@ -37,7 +68,7 @@
                 <h1 id='scoreBrd' class="text-4xl font-bold leading-none">0</h1>
                 <p class="text-sm text-gray-700 mb-4">Points</p>
                 <div>
-                    <button id="startGameBtm" class="bg-blue-500 text-white w-full py-3 rounded-full text-md hover:bg-blue-600 transition duration-350">Start Game</button>
+                    <button id="startGameBtn" class="bg-blue-500 text-white w-full py-3 rounded-full text-md hover:bg-blue-600 transition duration-350">Start Game</button>
                 </div>
             </div>
         </div>
@@ -53,6 +84,5 @@
 
         <!-- Game Script -->
         <script src="./script.js"></script>
-
     </body>
 </html>
