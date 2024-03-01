@@ -310,8 +310,8 @@ div[class^='layer'] {
     align-items: center;
     justify-content: space-evenly;
     user-select: none;
-    
-    transition: 1s;
+
+    transition: 1.5s ease-in-out;
     z-index: 1;
 }
 
@@ -378,7 +378,7 @@ div[class^='layer'] {
         scale: .5;
     }
     .processing {
-        top: 38%; 
+        top: 38%;
     }
     .alias-container {
         scale: .5;

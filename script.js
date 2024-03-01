@@ -1,70 +1,64 @@
-// Select canvas elements from html
+// Select canvas element from HTML
 const canvas = document.querySelector('canvas')
 
-/* Returns an object that provides methods and properties for drawing
- *   and manipulating images and graphics on a canvas element
- */
+// Returns an object providing methods for drawing and manipulating graphics on canvas
 const c = canvas.getContext('2d')
-// Set the width & height to fill the screen
+
+// Set canvas dimensions to fill the screen
 canvas.width = innerWidth
 canvas.height = innerHeight
 
-
-//| QUERY Selection |\\
+// Query Selections for UI elements \\
 const score = document.querySelector('#score')
 const scoreBrd = document.querySelector('#scoreBrd')
 const startGameBtm = document.querySelector('#startGameBtn')
 const startGameBrd = document.querySelector('#startGameBrd')
-
 const musicControl = document.querySelector('#musicControl')
 const soundControl = document.querySelector('#soundControl')
 const gameControl = document.querySelector('#gameControl')
-
 const layer1 = document.querySelector('.layer1')
 const layer2 = document.querySelector('.layer2')
 const layer3 = document.querySelector('.layer3')
 const outer = document.querySelector('.outer')
 const inner = document.querySelector('.inner')
 const percentage = document.querySelector('span')
-
 const processing = document.querySelector('.processing')
 const p1 = document.querySelector('.p1')
 const p2 = document.querySelector('.p2')
 const p3 = document.querySelector('.p3')
-
 const layer4 = document.querySelector('.layer4')
 const layer5 = document.querySelector('.layer5')
 const layer6 = document.querySelector('.layer6')
 const alias = document.querySelector('.alias')
 const save_btn = document.querySelector('#save-btn')
-
 const main = document.querySelector('.main')
 const power1 = document.querySelector('#power1')
 const power2 = document.querySelector('#power2')
 const power3 = document.querySelector('#power3')
 
 
-//|\\ CLASS declarations //|\\
-/// Player class [User Base Character]
+// Class declarations \\
+// Player class represents the user's base character
 class Player {
     constructor(x, y, color, radius){
-        // set player attributes
+        // Initialize player attributes
         this.x = x
         this.y = y
         this.color = color
         this.radius = radius
-        this.sfrRadius = 0
+        this.sfrRadius = 0 // Sphere radius for chameleon mode
     }
+
+    // Method to draw the player on canvas
     draw() {
+        // Draw player circle
         c.beginPath()
-        // create the player object (circle)
         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
-        // draw player in color
         c.fillStyle = this.color
         c.fill()
 
-        c.beginPath();
-        // Outer circle
+        // Draw outer circle for chameleon mode
+        c.beginPath()
         c.arc(this.x, this.y, this.sfrRadius, 0, Math.PI * 2, false)
         c.lineWidth = 4
         c.strokeStyle = this.color
@@ -72,131 +66,209 @@ class Player {
     }
 }
 
-/// Dart class [Projectiles]
+// Dart class represents projectiles
 class Dart {
     constructor(x, y, color, radius, velocity){
-        // set player attributes
+        // Initialize dart attributes
         this.x = x
         this.y = y
         this.color = color
         this.radius = radius
-        this.vel = velocity
+        this.vel = velocity // Velocity of the dart
     }
+
+    // Method to draw the dart on canvas
     draw() {
         c.beginPath()
-        // create the player object (circle)
-        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, {x:this.vel.x, y:this.vel.y})
-        // draw player in color
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
         c.fillStyle = this.color
         c.fill()
     }
+
+    // Method to update the dart's position
     update () {
-        // Update Projectile position by velocity
-        // To add speed to Darts, multiply the velocity
         this.draw()
+        // Update projectile position by velocity
         this.x += this.vel.x * 7
         this.y += this.vel.y * 7
     }
 }
 
-/// Targets class [Enemies]
+// Targets class represents enemies
 class Targets {
     constructor(x, y, color, radius, velocity){
-        // set player attributes
+        // Initialize target attributes
         this.x = x
         this.y = y
         this.color = color
         this.radius = radius
-        this.vel = velocity
+        this.vel = velocity // Velocity of the target
     }
+
+    // Method to draw the target on canvas
     draw() {
         c.beginPath()
-        // create the player object (circle)
-        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, {x:this.vel.x, y:this.vel.y})
-        // draw player in color
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
         c.fillStyle = this.color
         c.fill()
     }
+
+    // Method to update the target's position
     update(div=1) {
-        // Update Projectile position by velocity
         this.draw()
+        // Update target position by velocity
         this.x += this.vel.x / div
         this.y += this.vel.y / div
     }
 }
 
-// Super Targets [Boss Enemies]
+// Super Targets class represents boss enemies
 class colossalTargets extends Targets {
     constructor(x, y, color, radius, velocity) {
         super(x, y, color, radius, velocity)
-        this.colossal = true
+        this.colossal = true // Indicate if the target is colossal
     }
 
+    // Override update method to adjust movement for colossal targets
     update() {
-        // Update Projectile position by velocity
         this.draw()
-        this.x += this.vel.x / 2
-        this.y += this.vel.y / 2
+        this.x += this.vel.x / 2 // Adjust x velocity for colossal targets
+        this.y += this.vel.y / 2 // Adjust y velocity for colossal targets
     }
 }
 
-
-/// Targets class [Enemies]
+// Particle class represents visual effects
 const friction = 0.99
 class Particle {
     constructor(x, y, color, radius, velocity){
-        // set player attributes
+        // Initialize particle attributes
         this.x = x
         this.y = y
         this.color = color
         this.radius = radius
-        this.vel = velocity
-        this.opacity = 1
+        this.vel = velocity // Velocity of the particle
+        this.opacity = 1 // Opacity of the particle
     }
-    draw() {
 
+    // Method to draw the particle on canvas
+    draw() {
         c.save()
-        // set opacity
         c.globalAlpha = this.opacity
         c.beginPath()
-        // create the player object (circle)
-        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, {x:this.vel.x, y:this.vel.y})
-        // draw player in color
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
         c.fillStyle = this.color
         c.fill()
-
         c.restore()
     }
+
+    // Method to update the particle's position and opacity
     update () {
-        // Update Projectile position by velocity
         this.draw()
+        // Update particle position by velocity
         this.vel.x *= friction
         this.vel.y *= friction
         this.x += this.vel.x
         this.y += this.vel.y
+        // Decrease opacity over time
         this.opacity -= 0.01
     }
 }
 
 
-//\ AUDIO Settings /\\
+// Global variables \\
 
-// Sound player \\
+// Player object
+let player
+// Player username
+let USERNAME = 'Player'
+// Flag to indicate if the game is on
+let GAME0N = true
+// Player score
+let SCORE = 0
+// List to store projectiles
+let DARTS = []
+// List to store targets
+let TARGETS = []
+// List to store particles for visual effects
+let PARTICLES = []
+// Flags to control power-up availability
+let alwPower1 = true
+let alwPower2 = false
+let alwPower3 = false
+// Event listener function variables
+let _board
+let _music
+let _sound
+let _pauser
+let _shooter
+let _mousedown
+let _mousemove
+let _mouseup
+
+
+// Initialize game \\
+function init()
+{
+    // Clear canvas and set dimensions
+    canvas.width = innerWidth
+    canvas.height = innerHeight
+    c.clearRect(0, 0, canvas.width, canvas.height)
+
+    // Create player object
+    GAME0N = true
+    player = new Player(innerWidth / 2, innerHeight / 2, 'crimson', 40)
+
+    // Initialize lists
+    DARTS = []
+    TARGETS = []
+    PARTICLES = []
+
+    // Reset power-up availability
+    alwPower1 = true
+    alwPower2 = false
+    alwPower3 = false
+    activated2 = false
+    activated3 = false
+    power1.style.opacity = 1
+    power2.style.opacity = 0.5
+    power3.style.opacity = 0.5
+
+    // Clear all timeouts
+    let timeoutID = setTimeout(() => {});
+    while (timeoutID--) {
+        clearTimeout(timeoutID);
+    }
+    // Clear all intervals
+    let intervalID = setInterval(() => {}, 0);
+    while (intervalID--) {
+        clearInterval(intervalID);
+    }
+
+    // Reset score
+    SCORE = 0
+    score.innerHTML = SCORE
+    scoreBrd.innerHTML = SCORE
+}
+
+
+/// Game CONTROLS \\\
+// Audio player function to play sounds
 function sounder(path, vol=1)
 {
     if (soundOn)
     {
-        const player = new Audio
-        player.src = path
+        const player = new Audio(path)
         player.volume = vol
         player.play()
     }
 }
 
-/// AUDIO player \\\
+// Variables to control background music
 let music
 let soundOn = true
 let musicOn = true
+
+// Function to play background music and control sound settings
 function musiker()
 {
     // Play random background music
@@ -207,9 +279,9 @@ function musiker()
     music.volume = 0.9
     music.play()
     musicOn = true
-    musicControl.style.backgroundImage = 1
+    musicControl.style.opacity = 1
 
-    // Play or Pause music on music button click
+    // Toggle background music on music control button click
     musicControl.addEventListener('click', _music = () => {
         if (musicOn)
         {
@@ -222,7 +294,7 @@ function musiker()
         musicOn = !musicOn
     })
 
-    // Play or Pause music on music button click
+    // Toggle sound on sound control button click
     soundControl.addEventListener('click', _sound = () => {
         if (soundOn)
         {
@@ -234,107 +306,225 @@ function musiker()
     })
 }
 
-
-/// player var
-let player
-/// player Username
-let USERNAME = 'Player'
-/// Is the Game On?
-let GAME0N = true
-/// player score
-let SCORE = 0
-/// Projectiles list
-let DARTS = []
-/// Enemies list
-let TARGETS = []
-/// Particles list
-let PARTICLES = []
-/// Power UPs Allow
-let alwPower1 = true
-let alwPower2 = false
-let alwPower3 = false
-/// Event Listener function vars
-let _music
-let _sound
-let _pauser
-let _shooter
-let _mousedown
-let _mousemove
-let _mouseup
-
-
-/// RESTART GAME
-function init()
-{
-    // clear and set canvas size
-    canvas.width = innerWidth
-    canvas.height = innerHeight
-    c.clearRect(0, 0, canvas.width, canvas.height)
-
-    /// player creation
-    GAME0N = true
-    player = new Player(innerWidth / 2, innerHeight / 2, 'crimson', 40)
-
-    /// Projectiles list
-    DARTS = []
-    /// Enemies list
-    TARGETS = []
-    /// Dart and Target collision affect
-    PARTICLES = []
-
-    /// Power UPs Allow
-    alwPower1 = true
-    alwPower2 = false
-    alwPower3 = false
-    activated2 = false
-    activated3 = false
-    power1.style.opacity = 1
-    power2.style.opacity = 0.5
-    power3.style.opacity = 0.5
-
-    //\\ This line was added due to Canvas having replay performance issues
-    //if (!GAME0N) location.reload()
-
-    // Clear all setTimeout calls
-    let timeoutID = setTimeout(() => {});
-    while (timeoutID--) {
-        clearTimeout(timeoutID);
-    }
-    // Clear all setInterval calls
-    let intervalID = setInterval(() => {}, 0);
-    while (intervalID--) {
-        clearInterval(intervalID);
-    }
-
-    // reset score
-    SCORE = 0
-    score.innerHTML = SCORE
-    scoreBrd.innerHTML = SCORE
+// Game PAUSING ||<| \\
+let PAUSED = false
+function pausePlay() {
+    // Toggle the PAUSED flag when the game control button is clicked
+    gameControl.addEventListener('click', _pauser = () => {
+        if (GAME0N)
+        {
+            PAUSED = !PAUSED
+            if (PAUSED) {
+                // If paused, cancel the animation frame and change button icon
+                cancelAnimationFrame(animeID)
+                gameControl.style.backgroundImage = 'url(VisualVault/playn.png)'
+            } else {
+                // If unpaused, resume animation and change button icon
+                animeID = requestAnimationFrame(animator)
+                gameControl.style.backgroundImage = 'url(VisualVault/pausen.png)'
+            }
+        }
+    })
 }
 
-/// SPAWN Targets
+
+//| Game MODES |\\
+/// Chameleon MODE; Make player change colors like a chameleon
+function chameleon() {
+    let n = 0
+    // Iterate through the color wheel
+    const id = setInterval(() => {
+        if (!PAUSED && GAME0N)
+        {
+            // Green Sock Animation to change player color
+            gsap.to(player, {
+                color: `hsl(${n}, 58%, 55%)`
+            })
+            n += 2
+        }
+    }, 1000)
+
+    // Set up player sphere animation
+    gsap.to(player, { sfrRadius: 100, duration: 0.7, ease: "player.in"})
+}
+
+/// NORMAL MODE: In this mode, Projectiles are shot for each mouse click
+// Listen for mouse clicks
+function Normal() {
+    // Event listener for mouse clicks
+    addEventListener('click', _shooter = (event) => {
+        // Get the angle of the projectile
+        if (!PAUSED && GAME0N)
+        {
+            const angle = Math.atan2(event.clientY - canvas.height / 2 , event.clientX - canvas.width / 2)
+            const velocity = {
+                x: Math.cos(angle),
+                y: Math.sin(angle)
+            }
+            // Create Projectile on click
+            DARTS.push(new Dart(
+                canvas.width / 2,
+                canvas.height / 2,
+                'white',
+                5,
+                velocity
+            ))
+
+            // Play shooting sound effect
+            sounder('TuneBox/shot.mp3', 0.6)
+        }
+    })
+}
+
+/// OVERDRIVE MODE: In this mode, Projectiles are shot as long as the mouse click is down
+// Listen for mouse down
+function Overdrive()
+{
+    let isMouseDown = false
+
+    // Function to create a projectile
+    function createProjectile(event) {
+        const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2)
+        const velocity = {
+            x: Math.cos(angle),
+            y: Math.sin(angle)
+        }
+        // Create Projectile
+        DARTS.push(new Dart(
+            canvas.width / 2,
+            canvas.height / 2,
+            player.color,
+            5,
+            velocity
+        ))
+    }
+
+    // Event listener for mouse down
+    addEventListener('mousedown', _mousedown = (event) => {
+        isMouseDown = true
+        createProjectile(event)
+    })
+    // Event listener for mouse move
+    addEventListener('mousemove', _mousemove = (event) => {
+        createProjectile(event)
+    })
+    // Event listener for mouse up
+    addEventListener('mouseup', _mouseup = () => {
+        isMouseDown = false
+    })
+}
+
+
+
+
+//\ Game POWER UPs /\\
+function power_I() {
+    if (alwPower1 && GAME0N && !PAUSED)
+    {
+        // Play power up sound
+        sounder('TuneBox/ultra-field.mp3', 0.9)
+        // Pause Target creation
+        clearInterval(spawnTargetsID)
+
+        // Scale player size for power-up duration
+        gsap.to(player, {sfrRadius: 800, duration: 5, ease: "power1.inOut"});
+        setTimeout(() => {
+            // Resume Target attacks and revert player size
+            spawnTargets()
+            gsap.to(player, {sfrRadius: 100, duration: 3, ease: "power1.inOut"});
+        }, 20000)
+
+        // Diminish power-up button opacity and set cooldown
+        gsap.to(power1, { opacity: 0.5, duration: 0.5 });
+        alwPower1 = false
+    }
+
+    setTimeout(() => {
+        // Reset power-up button opacity and cooldown
+        gsap.to(power1, { opacity: 1, duration: 0.5 });
+        alwPower1 = true
+    }, 180000) // 3min cooldown time
+}
+
+function power_II() {
+    if (alwPower2 && GAME0N && !PAUSED)
+    {
+
+        // Play power up sound
+        sounder('TuneBox/giga-shot.mp3', 0.9)
+        // Switch to overdrive mode for a duration
+        removeEventListener('click', _shooter)
+        Overdrive()
+
+        setTimeout(() => {
+            // Revert back to normal mode after power-up duration
+            removeEventListener('mousedown', _mousedown)
+            removeEventListener('mousemove', _mousemove)
+            removeEventListener('mouseup', _mouseup)
+            Normal()
+        }, 20000) // 3min cooldown time
+
+        // Diminish power-up button opacity and set cooldown
+        gsap.to(power2, { opacity: 0.5, duration: 0.5 });
+        alwPower2 = false
+    }
+
+    setTimeout(() => {
+        // Reset power-up button opacity and cooldown
+        gsap.to(power2, { opacity: 1, duration: 0.5 });
+        alwPower2 = true
+    }, 180000) // 3min cooldown time
+}
+
+function power_III() {
+    if (alwPower3 && GAME0N && !PAUSED)
+    {
+        // Play power up sound
+        sounder('TuneBox/doomswave.mp3')
+
+        // Enlarge player size for a duration and clear targets
+        gsap.to(player, {sfrRadius: 1200, duration: 1, ease: "power3.inOut"});
+        TARGETS = [];
+        setTimeout(() => {
+            // Revert player size after power-up duration
+            gsap.to(player, {sfrRadius: 100, duration: 2, ease: "power3.inOut"});
+        }, 2500);
+
+        // Diminish power-up button opacity and set cooldown
+        gsap.to(power3, { opacity: 0.5, duration: 0.5 });
+        alwPower3 = false
+    }
+
+    setTimeout(() => {
+        // Reset power-up button opacity and cooldown
+        gsap.to(power3, { opacity: 1, duration: 0.5 });
+        alwPower3 = true
+    }, 180000)
+}
+
+
+/// SPAWN Targets \\\
 let timer = 0
 let spawnTargetsID
 let activated2, activated3 = false
 function spawnTargets() {
-    // SetInterval; make a call each 1500 millisecond
+    // SetInterval; spawn targets at intervals
     spawnTargetsID = setInterval(() => {
         if (!PAUSED && GAME0N)
         {
-            //# Random Target size
+            // Randomize target size and spawn location
             const radius = Math.random() * (50 - 15) + 15
-            //# Random Target Spawn #\\
             if (Math.random() < 0.5) {
-                // Out of screen Width, random height
+                // Spawn targets randomly on the width axis
                 var x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius
                 var y = Math.random() * canvas.height
             } else {
-                // Out of screen Height, random width
+                // Spawn targets randomly on the height axis
                 var x = Math.random() * canvas.width
                 var y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius
             }
             /// Target creation
-            // random Target color pick
+            // Randomize target color and velocity
             const color = `hsl(${Math.random() * 360}, 50%, 50%)`
             const angle = Math.atan2(canvas.height / 2 - y , canvas.width / 2 - x)
             const velocity = {
@@ -356,14 +546,15 @@ function spawnTargets() {
                         x: Math.cos(angle),
                         y: Math.sin(angle)
                     }
+                    // Create colossal target after a certain score threshold
                     TARGETS.push(new colossalTargets(x, y, 'white', radius, velocity))
                     timer = 0
                 }
                 else
                     timer++
             }
+            // Activate power-ups based on score thresholds
             if (SCORE >= 2500 && !activated2) {
-                // Power UP 1 & 2 release
                 alwPower2 = true
                 activated2 = true
                 gsap.to(power2, { opacity: 1, duration: .5 })
@@ -377,84 +568,81 @@ function spawnTargets() {
     }, 1200)
 }
 
-
-
 //-/ Animation GAME LOOP \-\\
 let animeID
 function animator() {
     if (!PAUSED)
         animeID = requestAnimationFrame(animator)
 
-    // Clear Frame
+    // Clear frame
     c.fillStyle = 'rgba(0, 0 , 0 , .1)'
     c.fillRect(0, 0, canvas.width, canvas.height)
 
     // Draw player
     player.draw()
 
-    // Draw Particles
+    // Update and draw particles
     PARTICLES.forEach((particle, Pndx) => {
-        // Particle clear
         if (particle.opacity <= 0) {
             PARTICLES.splice(Pndx, 1)
         } else {
             particle.update()
         }
     })
-    // Draw and update each dart in the dart list
+
+    // Update and draw darts
     DARTS.forEach((dart, Dndx) => {
         dart.update()
-        // Remove projectiles when out of bound (out the x and y axis)
+        // Remove projectiles when out of bounds
         if (dart.x - dart.radius < 0 || dart.x - dart.radius > canvas.width
             || dart.y + dart.radius < 0 || dart.y - dart.radius > canvas.height)
         {
-            // setTimeout waits until the next frame to perform changes
             setTimeout(() => {
                 DARTS.splice(Dndx, 1)
             }, 0)
         }
     })
 
-    // Draw and update each Targets in the Targets list
+    // Update and draw targets
     TARGETS.forEach((target, Tndx) => {
         const dist = Math.hypot(player.x - target.x, player.y - target.y)
 
-        //\ SPHERE Activation; slow down when in range /\\
+        // Slow down targets when player is in range
         if (dist - target.radius - player.sfrRadius < 1)
             target.update(3)
         else
             target.update()
 
-        //| GAME OVER |\\
+        // Check for game over condition
         if (dist - target.radius - player.radius < 1)
         {
             GAME0N = false
             music.pause()
             sounder('TuneBox/game.mp3')
 
-            // Pause The Animation loop
+            // Pause the animation loop and remove event listeners
             cancelAnimationFrame(animeID)
-            // Kill all working Event Listeners
             removeEventListener('click', _shooter)
+            removeEventListener('mouseup', _mouseup)
             removeEventListener('mousedown', _mousedown)
             removeEventListener('mousemove', _mousemove)
-            removeEventListener('mouseup', _mouseup)
             musicControl.removeEventListener('click', _music)
             soundControl.removeEventListener('click', _sound)
             gameControl.removeEventListener('click', _pauser)
-            // display the Game Board
-            startGameBrd.style.display = 'flex'
-            scoreBrd.innerHTML = SCORE
 
+            // Display game board
+            startGameBrd.style.display = 'flex'
+            startGameBtm.addEventListener('click', _board)
+            scoreBrd.innerHTML = SCORE
         }
-        // Compare distances, check is objects touch
+
+        // Check for collision between darts and targets
         DARTS.forEach((dart, Dndx) => {
             const dist = Math.hypot(dart.x - target.x, dart.y - target.y)
 
-            // When Projectile touch Target
             if (dist - target.radius - dart.radius < 1)
             {
-                // THE BIG BANG
+                // Create particles when dart hits target
                 for (let i = 0; i < target.radius; i++)
                 {
                     PARTICLES.push(
@@ -465,14 +653,13 @@ function animator() {
                     )
                 }
 
-                // When Projectile touch Target (shrink of remove)
+                // Adjust score and play sound effects
                 if (target.radius - 10 > 10)
                 {
                     SCORE += 100
                     score.innerHTML = SCORE
                     let volume = 0.01 * target.radius + 0.5
 
-                    // Green Sock Animation
                     gsap.to(target, {
                         radius: target.radius - 10
                     })
@@ -480,7 +667,6 @@ function animator() {
                         DARTS.splice(Dndx, 1)
                     }, 0)
 
-                    // Enemy damage sound affect
                     sounder('TuneBox/hit.mp3', 0.9 )
 
                 } else {
@@ -488,138 +674,22 @@ function animator() {
                     SCORE += 250
                     score.innerHTML = SCORE
 
-                    // Enemy destruction sound affect
-                    TARGETS[Tndx].colossal ? sounder('TuneBox/bom.mp3') : sounder('TuneBox/pop.mp3')
+                    target.colossal ? sounder('TuneBox/bom.mp3') : sounder('TuneBox/pop.mp3')
 
-                    // setTimeout waits until the next frame to perform changes
-                    // Enemy explode sound affect
                     setTimeout(() => {
                         TARGETS.splice(Tndx, 1)
                         DARTS.splice(Dndx, 1)
                     }, 0)
-
                 }
-
             }
         })
     })
 }
 
 
-/// Chameleon MODE; Make player change colors like a chameleon
-function chameleon() {
-    let n = 0
-    // go trough the color wheel
-    const id = setInterval(() => {
-        if (!PAUSED && GAME0N)
-        {
-            // Green Sock Animation
-            gsap.to(player, {
-                color: `hsl(${n}, 58%, 55%)`
-            })
-            n += 2
-        }
-    }, 1000)
-
-    // set up player sphere
-    gsap.to(player, { sfrRadius: 100 })
-
-}
-
-
-/// InGame Click Management \\\
-
-/// NORMAL MODE: In this mode, Projectiles are shot for each mouse click
-// listen for mouse clicks
-function Normal() {
-    // listen for mouse clicks
-    // event contains mouse click information
-    addEventListener('click', _shooter = (event) => {
-        // Get the angle of the projectile
-        if (!PAUSED && GAME0N)
-        {
-            const angle = Math.atan2(event.clientY - canvas.height / 2 , event.clientX - canvas.width / 2)
-            const velocity = {
-            x: Math.cos(angle),
-            y: Math.sin(angle)
-        }
-            // Projectile creation (on click)
-            DARTS.push(new Dart(
-                canvas.width / 2,
-                canvas.height / 2,
-                'white',
-                5,
-                velocity
-            ))
-
-            sounder('TuneBox/shot.mp3', 0.6)
-        }
-    })
-}
-
-/// OVERDRIVE MODE: In this mode, Projectiles are shot as long as the mouse click is down
-// listen for mouse down
-function Overdrive()
-{
-    let isMouseDown = false
-
-    // Function to create a projectile
-    function createProjectile(event) {
-        const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2)
-        const velocity = {
-            x: Math.cos(angle),
-            y: Math.sin(angle)
-        }
-        // Projectile creation
-        DARTS.push(new Dart(
-            canvas.width / 2,
-            canvas.height / 2,
-            player.color,
-            5,
-            velocity
-        ))
-    }
-    //const createProjectileThrottled = _.throttle(createProjectile, 100)
-    // Listen for mouse down event
-    addEventListener('mousedown', _mousedown = (event) => {
-        isMouseDown = true
-        createProjectile(event)
-    })
-    // Listen for mouse move event
-    addEventListener('mousemove', _mousemove = (event) => {
-        createProjectile(event)
-    })
-    // Listen for mouse up event
-    addEventListener('mouseup', _mouseup = () => {
-        isMouseDown = false
-    })
-}
-
-
-// Game PAUSING ||<| \\
-let PAUSED = false
-function pausePlay() {
-    // Toggle the PAUSED flag when the sound control button is clicked
-    gameControl.addEventListener('click', _pauser = () => {
-        if (GAME0N)
-        {
-            PAUSED = !PAUSED
-            if (PAUSED) {
-                // If paused, cancel the animation frame
-                cancelAnimationFrame(animeID)
-                gameControl.style.backgroundImage = 'url(VisualVault/playn.png)'
-            } else {
-                // If unpaused, resume animation
-                animeID = requestAnimationFrame(animator)
-                gameControl.style.backgroundImage = 'url(VisualVault/pausen.png)'
-            }
-        }
-    })
-}
-
-
-/// Get User Alias
+// Get USER ALIAS \\
 function setAlias() {
+    // Get user input alias and set it
     let input = document.querySelector('#text-box').value;
     if (input.length > 0) {
         USERNAME = input
@@ -627,6 +697,7 @@ function setAlias() {
     }
 }
 function pass() {
+    // Display user alias and hide alias input after 3 seconds
     alias.innerHTML = USERNAME
     layer6.style.left = '100%'
     layer5.style.left = '100%'
@@ -640,101 +711,30 @@ function pass() {
 }
 
 
-//\ Game Power Ups /\\
-function power_I() {
-    if (alwPower1 && GAME0N && !PAUSED)
-    {
-        sounder('TuneBox/ultra-field.mp3', 0.9)
-        // Pause Target creation
-        clearInterval(spawnTargetsID)
-
-        gsap.to(player, {sfrRadius: 800, duration: 5, ease: "power1.inOut"});
-        setTimeout(() => {
-            // Resume Target attacks
-            spawnTargets()
-            gsap.to(player, {sfrRadius: 100, duration: 3, ease: "power1.inOut"});
-        }, 20000)
-
-
-        gsap.to(power1, { opacity: 0.5, duration: 0.5 });
-        alwPower1 = false
-    }
-
-    setTimeout(() => {
-        gsap.to(power1, { opacity: 1, duration: 0.5 });
-        alwPower1 = true
-    }, 120000)
-}
-
-function power_II() {
-    if (alwPower2 && GAME0N && !PAUSED)
-    {
-
-        sounder('TuneBox/giga-shot.mp3', 0.9)
-        removeEventListener('click', _shooter)
-        Overdrive()
-
-        setTimeout(() => {
-            removeEventListener('mousedown', _mousedown)
-            removeEventListener('mousemove', _mousemove)
-            removeEventListener('mouseup', _mouseup)
-            Normal()
-        }, 20000)
-
-        gsap.to(power2, { opacity: 0.5, duration: 0.5 });
-        alwPower2 = false
-    }
-
-    setTimeout(() => {
-        gsap.to(power2, { opacity: 1, duration: 0.5 });
-        alwPower2 = true
-    }, 120000)
-}
-
-function power_III() {
-    if (alwPower3 && GAME0N && !PAUSED)
-    {
-        sounder('TuneBox/doomswave.mp3')
-
-        gsap.to(player, {sfrRadius: 1200, duration: 1, ease: "power1.inOut"});
-        TARGETS = [];
-        setTimeout(() => {
-            gsap.to(player, {sfrRadius: 100, duration: 2, ease: "power1.inOut"});
-        }, 2500);
-
-        gsap.to(power3, { opacity: 0.5, duration: 0.5 });
-        alwPower3 = false
-    }
-
-    setTimeout(() => {
-        gsap.to(power3, { opacity: 1, duration: 0.5 });
-        alwPower3 = true
-    }, 120000)
-}
-
-
-
-
 ///\ LOAD GAME /\\\
 let count = 0;
+// Event listener for loading the game
 inner.addEventListener('click', loader = () => {
-    // remove Event Listener (one click is needed)
+    // Remove event listener to ensure only one click is processed
     inner.removeEventListener('click', loader)
 
     /* Process board smooth appearance */
     percentage.textContent = '0%'
+
+    // Smooth appearance animation of loading elements
     setTimeout(() => {
         gsap.to(p1, { opacity: 0.5, duration: 1 });
         gsap.to(p2, { opacity: 0.5, duration: 2 });
         gsap.to(p3, { opacity: 0.5, duration: 3 });
     }, 1000)
 
+    // Start loading animation and transition when loading
     setTimeout(() => {
         /* Percent Loader */
         const id = setInterval(() => {
             if (GAME0N) {
                 if (count == 99) {
-                    // load to 100% and animate load screen out
+                    // Load reaches 100%, animate out the loading screen
                     setTimeout(() => {
                         percentage.textContent = '100%'
                         outer.classList.remove('active-loader')
@@ -744,7 +744,7 @@ inner.addEventListener('click', loader = () => {
                         layer1.style.left = '-100%'
                     }, 1000)
 
-                    // clear load screen and Interval
+                    // Hide loading elements and clear interval
                     setTimeout(() => {
                         layer3.style.display = 'none'
                         layer2.style.display = 'none'
@@ -759,12 +759,14 @@ inner.addEventListener('click', loader = () => {
                     outer.classList.add('active-loader')
                 }
             }
-        }, 75) // < Loading speed
+        }, 5) // Loading speed
 
          /* Process appear one by one */
         const ls = [p1, p2, p3];
         let i = 1;
         gsap.to(p1, { opacity: 1, scale: '1.5', duration: 0.5 });
+
+        // Sequential animation for loading elements
         const _id = setInterval(() => {
             if (i < ls.length) {
                 gsap.to(ls[i], { opacity: 1, scale: '1.5', duration: 0.5 });
@@ -777,23 +779,30 @@ inner.addEventListener('click', loader = () => {
     }, 2000)
 })
 
+
 /// START GAME \\\
-startGameBtm.addEventListener('click', () => {
+// Event listener for starting the game
+startGameBtm.addEventListener('click', _board = () => {
+    // Hide start game board remove event listener
     startGameBrd.style.display = 'none'
+    startGameBtm.removeEventListener('click', _board)
+
     // Main Game Menu Display
     if (innerWidth > 550)
-        gsap.to(main, { top: '20px', duration: .8, ease: "power1.inOut"})
+        gsap.to(main, { top: '20px', duration: 1, ease: "main.inOut"})
     else
-        gsap.to(main, { top: '90%', duration: .8, ease: "power1.inOut"})
+        gsap.to(main, { top: '90%', duration: 1, ease: "main.inOut"})
 
+    // Initialize game components and start animations
     init()
     animator()
     chameleon()
     spawnTargets()
 
+    // Play start game sound
     sounder('TuneBox/play.mp3')
 
-    // play background music
+    // Play background music and set up game controls
     setTimeout(() => {
         // Background Music
         musiker()
