@@ -23,6 +23,7 @@ https://chriscourses.com/game-course
 * GitHub
 * Photoshop
 * ChatGPT
+* Copilot
 
 ### Frameworks:
 * GreenSock Animation Platform (GSAP)
