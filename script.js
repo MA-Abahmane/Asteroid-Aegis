@@ -318,11 +318,11 @@ function pausePlay() {
             if (PAUSED) {
                 // If paused, cancel the animation frame and change button icon
                 cancelAnimationFrame(animeID)
-                gameControl.style.backgroundImage = 'url(VisualVault/playn.png)'
+                gameControl.style.backgroundImage = 'url(VisualVault/play.png)'
             } else {
                 // If unpaused, resume animation and change button icon
                 animeID = requestAnimationFrame(animator)
-                gameControl.style.backgroundImage = 'url(VisualVault/pausen.png)'
+                gameControl.style.backgroundImage = 'url(VisualVault/pause.png)'
             }
         }
     })

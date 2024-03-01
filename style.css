@@ -14,7 +14,6 @@ body {
     background: black;
 }
 
-
 /*/ Dropdown game controls menu  /*/
 .__container {
     width: 70px;
@@ -62,13 +61,12 @@ body {
     transition: .5s ease;
 }
 
-
 /* Menu Button images */
 #musicControl {
     width: 42px;
     height: 42px;
     background-size: contain;
-    background-image: url(VisualVault/mm.png);
+    background-image: url(VisualVault/music.png);
 
     transition: .5s;
 }
@@ -77,7 +75,7 @@ body {
     width: 42px;
     height: 42px;
     background-size: contain;
-    background-image: url(VisualVault/nn.png);
+    background-image: url(VisualVault/sound.png);
 
     transition: .5s;
 }
@@ -86,7 +84,7 @@ body {
     width: 44px;
     height: 44px;
     background-size: contain;
-    background-image: url(VisualVault/pausen.png);
+    background-image: url(VisualVault/pause.png);
 
     transition: .2s;
 }
@@ -94,7 +92,6 @@ body {
 #musicControl, #soundControl, #gameControl:hover {
     opacity: 0.85;
 }
-
 
 /*/ Under animation layers /*/
 div[class^='layer'] {
@@ -193,7 +190,6 @@ div[class^='layer'] {
     background-size: 300%;
 }
 
-
 /*/ Process display board /*/
 .processing {
     position: absolute;
@@ -224,7 +220,6 @@ div[class^='layer'] {
     opacity: 0;
     scale: 1;
 }
-
 
 .layer4 {
     background-color: #240f52;
@@ -292,7 +287,6 @@ div[class^='layer'] {
     background: #2afda1;
 }
 
-
 /* Main Menu */
 .main {
     position: absolute;
@@ -320,25 +314,22 @@ div[class^='layer'] {
     width: 40px;
     height: 40px;
     background-size: contain;
-    background-image: url(VisualVault/oo.png);
+    background-image: url(VisualVault/ultraField.png);
 }
-
 #power2 {
     width: 40px;
     height: 40px;
     background-size: contain;
-    background-image: url(VisualVault/ss.png);
+    background-image: url(VisualVault/gigaShot.png);
     opacity: 0.5;
 }
-
 #power3 {
     width: 40px;
     height: 40px;
     background-size: contain;
-    background-image: url(VisualVault/kk.png);
+    background-image: url(VisualVault/doomswave.png);
     opacity: 0.5;
 }
-
 
 .guid {
     position: absolute;
@@ -360,8 +351,6 @@ div[class^='layer'] {
     font-family: myFont;
     font-size: larger;
 }
-
-
 
 
 /* Width Scale*/
@@ -423,4 +412,3 @@ div[class^='layer'] {
         scale: .5;
     }
 }
-
