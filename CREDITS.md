@@ -6,6 +6,7 @@ https://chriscourses.com/game-course
 
 ### Icons:
 - https://www.flaticon.com/
+- https://www.freepik.com/
 
 ### Music:
 - https://pixabay.com/users/xtremefreddy-32332307/
