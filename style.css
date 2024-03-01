@@ -339,6 +339,29 @@ div[class^='layer'] {
 }
 
 
+.guid {
+    position: absolute;
+    top: 75%;
+    left: -320px;
+    width: 300px;
+    height: 80px;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    user-select: none;
+
+    z-index: 1;
+} 
+.guid span {
+    text-align: center;
+    font-family: myFont;
+    font-size: larger;
+}
+
+
+
 
 /* Width Scale*/
 @media (max-width: 850px) {

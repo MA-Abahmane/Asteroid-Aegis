@@ -35,6 +35,7 @@ const main = document.querySelector('.main')
 const power1 = document.querySelector('#power1')
 const power2 = document.querySelector('#power2')
 const power3 = document.querySelector('#power3')
+const guid = document.querySelector('.guid')
 
 
 // Class declarations \\
@@ -344,7 +345,7 @@ function chameleon() {
         }
     }, 1000)
 
-    // Set up player sphere animation
+    // Set up player SPHERE animation
     gsap.to(player, { sfrRadius: 100, duration: 0.7, ease: "player.in"})
 }
 
@@ -722,11 +723,9 @@ inner.addEventListener('click', loader = () => {
     percentage.textContent = '0%'
 
     // Smooth appearance animation of loading elements
-    setTimeout(() => {
-        gsap.to(p1, { opacity: 0.5, duration: 1 });
-        gsap.to(p2, { opacity: 0.5, duration: 2 });
-        gsap.to(p3, { opacity: 0.5, duration: 3 });
-    }, 1000)
+    gsap.to(p1, { opacity: 0.5, duration: 1 });
+    gsap.to(p2, { opacity: 0.5, duration: 2 });
+    gsap.to(p3, { opacity: 0.5, duration: 3 });
 
     // Start loading animation and transition when loading
     setTimeout(() => {
@@ -792,6 +791,11 @@ startGameBtm.addEventListener('click', _board = () => {
         gsap.to(main, { top: '20px', duration: 1, ease: "main.inOut"})
     else
         gsap.to(main, { top: '90%', duration: 1, ease: "main.inOut"})
+
+    // Game GUID In Out
+    if (SCORE == 0)
+    gsap.to(guid, {left: '25px', duration: 1, ease: "guid.in"})
+    gsap.to(guid, {left: '-320px', duration: 0.5, delay: 7})
 
     // Initialize game components and start animations
     init()
