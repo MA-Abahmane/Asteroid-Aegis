@@ -754,7 +754,7 @@ inner.addEventListener('click', loader = () => {
                     outer.classList.add('active-loader')
                 }
             }
-        }, 5) // Loading speed
+        }, 75) // Loading speed
 
          /* Process appear one by one */
         const ls = [p1, p2, p3];
