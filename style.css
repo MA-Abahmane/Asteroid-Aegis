@@ -292,6 +292,7 @@ div[class^='layer'] {
     background: #2afda1;
 }
 
+
 /* Main Menu */
 .main {
     position: absolute;
@@ -352,7 +353,7 @@ div[class^='layer'] {
     justify-content: space-evenly;
     user-select: none;
 
-    z-index: 1;
+    z-index: 2;
 } 
 .guid span {
     text-align: center;
@@ -374,6 +375,14 @@ div[class^='layer'] {
     .alias-container {
         scale: .8;
     }
+    .guid {
+        width: 250px;
+        height: 70px;
+
+    }
+    .guid img {
+        width: 50px;
+    }
 }
 @media (max-width: 390px) {
     ._container .inner, .outer, .processing {
@@ -385,6 +394,9 @@ div[class^='layer'] {
     .alias-container {
         scale: .5;
     }
+    .main {
+        scale: .9;
+    }
 }
 @media (max-width: 305px) {
     ._container .inner, .outer, .processing {
@@ -392,6 +404,10 @@ div[class^='layer'] {
     }
     .alias-container {
         scale: .4;
+    }
+    .main {
+        scale: .8;
+        margin-left: -35px;
     }
 }
 
