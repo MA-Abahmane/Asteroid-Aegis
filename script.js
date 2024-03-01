@@ -416,8 +416,6 @@ function Overdrive()
 }
 
 
-
-
 //\ Game POWER UPs /\\
 function power_I() {
     if (alwPower1 && GAME0N && !PAUSED)
@@ -592,20 +590,20 @@ function animator() {
     })
 
     // Update and draw darts
-    DARTS.forEach((dart, Dndx) => {
+    for (let Dndx = DARTS.length - 1; Dndx >= 0; Dndx--) {
+        let dart = DARTS[Dndx];
         dart.update()
         // Remove projectiles when out of bounds
         if (dart.x - dart.radius < 0 || dart.x - dart.radius > canvas.width
             || dart.y + dart.radius < 0 || dart.y - dart.radius > canvas.height)
         {
-            setTimeout(() => {
-                DARTS.splice(Dndx, 1)
-            }, 0)
+            DARTS.splice(Dndx, 1)
         }
-    })
+    }
 
     // Update and draw targets
-    TARGETS.forEach((target, Tndx) => {
+    for (let Tndx = TARGETS.length - 1; Tndx >= 0; Tndx--) {
+        let target = TARGETS[Tndx];
         const dist = Math.hypot(player.x - target.x, player.y - target.y)
 
         // Slow down targets when player is in range
@@ -638,7 +636,8 @@ function animator() {
         }
 
         // Check for collision between darts and targets
-        DARTS.forEach((dart, Dndx) => {
+        for (let Dndx = DARTS.length - 1; Dndx >= 0; Dndx--) {
+            let dart = DARTS[Dndx];
             const dist = Math.hypot(dart.x - target.x, dart.y - target.y)
 
             if (dist - target.radius - dart.radius < 1)
@@ -664,9 +663,7 @@ function animator() {
                     gsap.to(target, {
                         radius: target.radius - 10
                     })
-                    setTimeout(() => {
-                        DARTS.splice(Dndx, 1)
-                    }, 0)
+                    DARTS.splice(Dndx, 1)
 
                     sounder('TuneBox/hit.mp3', 0.9 )
 
@@ -677,14 +674,13 @@ function animator() {
 
                     target.colossal ? sounder('TuneBox/bom.mp3') : sounder('TuneBox/pop.mp3')
 
-                    setTimeout(() => {
-                        TARGETS.splice(Tndx, 1)
-                        DARTS.splice(Dndx, 1)
-                    }, 0)
+                    TARGETS.splice(Tndx, 1)
+                    DARTS.splice(Dndx, 1)
+                    break
                 }
             }
-        })
-    })
+        }
+    }
 }
 
 
@@ -758,7 +754,7 @@ inner.addEventListener('click', loader = () => {
                     outer.classList.add('active-loader')
                 }
             }
-        }, 75) // Loading speed
+        }, 5) // Loading speed
 
          /* Process appear one by one */
         const ls = [p1, p2, p3];
