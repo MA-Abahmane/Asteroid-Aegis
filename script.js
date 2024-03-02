@@ -553,12 +553,12 @@ function spawnTargets() {
                     timer++
             }
             // Activate power-ups based on score thresholds
-            if (SCORE >= 2500 && !activated2) {
+            if (SCORE >= 20000 && !activated2) {
                 alwPower2 = true
                 activated2 = true
                 gsap.to(power2, { opacity: 1, duration: .5 })
             }
-            if (SCORE >= 4500 && !activated3) {
+            if (SCORE >= 45000 && !activated3) {
                 alwPower3 = true
                 activated3 = true
                 gsap.to(power3, { opacity: 1, duration: .5 })
@@ -713,7 +713,7 @@ function pass() {
             layer6.style.display = 'none'
             layer5.style.display = 'none'
             layer4.style.display = 'none'
-        }, 3000)
+        }, 2000)
     }
 }
 
@@ -764,7 +764,7 @@ inner.addEventListener('click', loader = () => {
                     outer.classList.add('active-loader')
                 }
             }
-        }, 5) // Loading speed
+        }, 75) // Loading speed
 
          /* Process appear one by one */
         const ls = [p1, p2, p3];
