@@ -28,3 +28,9 @@ https://chriscourses.com/game-course
 ### Frameworks:
 * GreenSock Animation Platform (GSAP)
 * Tailwind CSS
+
+### Site Deployment
+*  GitHub Pages
+*  Netlify
+* .Tech Domains
+
