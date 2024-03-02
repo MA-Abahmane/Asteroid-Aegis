@@ -60,5 +60,6 @@ This project is licensed under the [MIT License](https://github.com/MA-Abahmane/
 <br>
 
 ---
-Game [***Link1***](https://asteroid-aegis.netlify.app/) <br>
-Game [***Link2***](https://ma-abahmane.github.io/Asteroid-Aegis/)
+Game [***Link1***](https://asteroid-aegis.tech/) <br>
+Game [***Link2***](https://asteroid-aegis.netlify.app/) <br>
+Game [***Link3***](https://ma-abahmane.github.io/Asteroid-Aegis/)
