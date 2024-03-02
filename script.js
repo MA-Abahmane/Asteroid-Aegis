@@ -373,10 +373,8 @@ function Normal() {
             ))
 
             // Cursor animation
-            htmlCanvas.style.cursor = "url('VisualVault/_aim.png') 25 25, auto"
-            setTimeout(() => {
-                htmlCanvas.style.cursor = "url('VisualVault/aim.png') 30 30, auto"
-            }, 70)
+            gsap.to(htmlCanvas, {cursor: "url('VisualVault/_aim.png') 25 25, auto"})
+            gsap.to(htmlCanvas, {cursor: "url('VisualVault/aim.png') 25 25, auto"})
 
             // Play shooting sound effect
             sounder('TuneBox/shot.mp3', 0.6)
