@@ -343,6 +343,7 @@ div[class^='layer'] {
     align-items: center;
     justify-content: space-evenly;
     user-select: none;
+    overflow: hidden;
 
     z-index: 2;
 } 
@@ -350,6 +351,12 @@ div[class^='layer'] {
     text-align: center;
     font-family: myFont;
     font-size: larger;
+}
+.guid #img {
+    width: 70px;
+    height: 70px;
+    background-size: contain;
+    background-image: url(VisualVault/mouse.gif);
 }
 
 
@@ -410,5 +417,15 @@ div[class^='layer'] {
     }
     .alias-container {
         scale: .5;
+    }
+}
+
+/* Device Query */
+@media (pointer: coarse) {
+    .guid #img {
+        width: 60px;
+        height: 60px;
+        background: url(VisualVault/click.gif) no-repeat;
+        background-size: contain;
     }
 }
