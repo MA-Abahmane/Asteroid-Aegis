@@ -687,24 +687,34 @@ function animator() {
 // Get USER ALIAS \\
 function setAlias() {
     // Get user input alias and set it
-    let input = document.querySelector('#text-box').value;
+    let inputElement = document.querySelector('#text-box');
+    let input = inputElement.value;
     if (input.length > 0) {
-        USERNAME = input
-        pass()
+        inputElement.setCustomValidity('');
+        USERNAME = input;
+        pass();
+    } else {
+        inputElement.setCustomValidity('Please enter a username');
+        inputElement.reportValidity();
     }
 }
 function pass() {
     // Display user alias and hide alias input after 3 seconds
-    alias.innerHTML = USERNAME
-    layer6.style.left = '100%'
-    layer5.style.left = '100%'
-    layer4.style.left = '100%'
+    if (layer3.style.display == 'none')
+    {
+        let inputElement = document.querySelector('#text-box');
+        inputElement.setCustomValidity('');
+        alias.innerHTML = USERNAME
+        layer6.style.transform = 'translateX(100%)'
+        layer5.style.transform = 'translateX(100%)'
+        layer4.style.transform = 'translateX(100%)'
 
-    setTimeout(() => {
-        layer6.style.display = 'none'
-        layer5.style.display = 'none'
-        layer4.style.display = 'none'
-    }, 3000)
+        setTimeout(() => {
+            layer6.style.display = 'none'
+            layer5.style.display = 'none'
+            layer4.style.display = 'none'
+        }, 3000)
+    }
 }
 
 
@@ -745,7 +755,7 @@ inner.addEventListener('click', loader = () => {
                         layer2.style.display = 'none'
                         layer1.style.display = 'none'
                         clearInterval(id)
-                    }, 3000)
+                    }, 2500)
 
                 }
                 else {
@@ -754,7 +764,7 @@ inner.addEventListener('click', loader = () => {
                     outer.classList.add('active-loader')
                 }
             }
-        }, 75) // Loading speed
+        }, 5) // Loading speed
 
          /* Process appear one by one */
         const ls = [p1, p2, p3];
