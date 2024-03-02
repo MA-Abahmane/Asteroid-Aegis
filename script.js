@@ -9,6 +9,7 @@ canvas.width = innerWidth
 canvas.height = innerHeight
 
 // Query Selections for UI elements \\
+const htmlCanvas = document.getElementsByTagName("canvas")[0];
 const score = document.querySelector('#score')
 const scoreBrd = document.querySelector('#scoreBrd')
 const startGameBtm = document.querySelector('#startGameBtn')
@@ -371,6 +372,12 @@ function Normal() {
                 velocity
             ))
 
+            // Cursor animation
+            htmlCanvas.style.cursor = "url('VisualVault/_aim.png') 25 25, auto"
+            setTimeout(() => {
+                htmlCanvas.style.cursor = "url('VisualVault/aim.png') 30 30, auto"
+            }, 70)
+
             // Play shooting sound effect
             sounder('TuneBox/shot.mp3', 0.6)
         }
@@ -399,6 +406,9 @@ function Overdrive()
             velocity
         ))
     }
+
+    // cursor animation
+    htmlCanvas.style.cursor = "url('VisualVault/autoAim.png') 30 30, auto";
 
     // Event listener for mouse down
     addEventListener('mousedown', _mousedown = (event) => {
@@ -448,7 +458,6 @@ function power_I() {
 function power_II() {
     if (alwPower2 && GAME0N && !PAUSED)
     {
-
         // Play power up sound
         sounder('TuneBox/giga-shot.mp3', 0.9)
         // Switch to overdrive mode for a duration
@@ -460,6 +469,8 @@ function power_II() {
             removeEventListener('mousedown', _mousedown)
             removeEventListener('mousemove', _mousemove)
             removeEventListener('mouseup', _mouseup)
+            // Return cursor to Normal aim
+            htmlCanvas.style.cursor = "url('VisualVault/aim.png') 30 30, auto"
             Normal()
         }, 20000) // 3min cooldown time
 

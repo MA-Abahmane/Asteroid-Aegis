@@ -14,6 +14,10 @@ body {
     background: black;
 }
 
+canvas {
+    cursor: url(VisualVault/aim.png) 30 30, auto;
+}
+
 /*/ Dropdown game controls menu  /*/
 .__container {
     width: 70px;
@@ -420,7 +424,7 @@ div[class^='layer'] {
     }
 }
 
-/* Device Query */
+/* Touch Devices */
 @media (pointer: coarse) {
     .guid #img {
         width: 60px;
