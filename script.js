@@ -563,7 +563,7 @@ function spawnTargets() {
                     timer++
             }
             // Activate power-ups based on score thresholds
-            if (SCORE >= 2000 && !activated2) {
+            if (SCORE >= 20000 && !activated2) {
                 alwPower2 = true
                 activated2 = true
                 gsap.to(power2, { opacity: 1, duration: .5 })
