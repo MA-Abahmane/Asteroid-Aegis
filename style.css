@@ -18,6 +18,21 @@ canvas {
     cursor: url(VisualVault/aim.png) 30 30, auto;
 }
 
+.score {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-family: myFont, bitter, arial;
+    font-size: 20px;
+    color: white;
+    user-select: none;
+    z-index: 1;
+}
+#scorenum {
+    display: inline-block;
+    margin-left: 3px;
+}
+
 /*/ Dropdown game controls menu  /*/
 .__container {
     width: 70px;

@@ -10,7 +10,7 @@ canvas.height = innerHeight
 
 // Query Selections for UI elements \\
 const htmlCanvas = document.getElementsByTagName("canvas")[0];
-const score = document.querySelector('#score')
+const score = document.querySelector('#scorenum')
 const scoreBrd = document.querySelector('#scoreBrd')
 const startGameBtm = document.querySelector('#startGameBtn')
 const startGameBrd = document.querySelector('#startGameBrd')
@@ -140,7 +140,6 @@ class colossalTargets extends Targets {
 }
 
 // Particle class represents visual effects
-const friction = 0.99
 class Particle {
     constructor(x, y, color, radius, velocity){
         // Initialize particle attributes
@@ -150,6 +149,7 @@ class Particle {
         this.radius = radius
         this.vel = velocity // Velocity of the particle
         this.opacity = 1 // Opacity of the particle
+        this.friction = 0.99
     }
 
     // Method to draw the particle on canvas
@@ -167,8 +167,8 @@ class Particle {
     update () {
         this.draw()
         // Update particle position by velocity
-        this.vel.x *= friction
-        this.vel.y *= friction
+        this.vel.x *= this.friction
+        this.vel.y *= this.friction
         this.x += this.vel.x
         this.y += this.vel.y
         // Decrease opacity over time
@@ -208,7 +208,7 @@ let _mousemove
 let _mouseup
 
 
-// Initialize game \\
+// INITIALIZE GAME \\
 function init()
 {
     // Clear canvas and set dimensions
@@ -227,6 +227,9 @@ function init()
 
     // Reset power-up availability
     alwPower1 = true
+    // Create the pop in and out animation
+    gsap.to(power1, {scale: 1.3, duration: 0.5, delay: 2, yoyo: true, repeat: 5, ease: "power1.inOut"})
+
     alwPower2 = false
     alwPower3 = false
     activated2 = false
@@ -253,7 +256,7 @@ function init()
 }
 
 
-/// Game CONTROLS \\\
+/// GAME CONTROLS \\\
 // Audio player function to play sounds
 function sounder(path, vol=1)
 {
@@ -330,7 +333,7 @@ function pausePlay() {
 }
 
 
-//| Game MODES |\\
+//| GAME MODES |\\
 /// Chameleon MODE; Make player change colors like a chameleon
 function chameleon() {
     let n = 0
@@ -451,6 +454,9 @@ function power_I() {
         // Reset power-up button opacity and cooldown
         gsap.to(power1, { opacity: 1, duration: 0.5 });
         alwPower1 = true
+        sounder('TuneBox/play.mp3')
+        // Create the pop in and out animation
+        gsap.to(power1, {scale: 1.3, duration: 0.5, yoyo: true, repeat: 5, ease: "power1.inOut"});
     }, 180000) // 3min cooldown time
 }
 
@@ -482,6 +488,9 @@ function power_II() {
         // Reset power-up button opacity and cooldown
         gsap.to(power2, { opacity: 1, duration: 0.5 });
         alwPower2 = true
+        sounder('TuneBox/play.mp3')
+        // Create the pop in and out animation
+        gsap.to(power2, {scale: 1.3, duration: 0.5, yoyo: true, repeat: 5, ease: "power2.inOut"});
     }, 180000) // 3min cooldown time
 }
 
@@ -508,6 +517,9 @@ function power_III() {
         // Reset power-up button opacity and cooldown
         gsap.to(power3, { opacity: 1, duration: 0.5 });
         alwPower3 = true
+        sounder('TuneBox/play.mp3')
+        // Create the pop in and out animation
+        gsap.to(power3, {scale: 1.3, duration: 0.5, yoyo: true, repeat: 5, ease: "power3.inOut"});
     }, 180000)
 }
 
@@ -566,12 +578,18 @@ function spawnTargets() {
             if (SCORE >= 20000 && !activated2) {
                 alwPower2 = true
                 activated2 = true
+                sounder('TuneBox/play.mp3')
                 gsap.to(power2, { opacity: 1, duration: .5 })
+                // Create the pop in and out animation
+                gsap.to(power2, {scale: 1.3, duration: 0.5, yoyo: true, repeat: 5, ease: "power2.inOut"})
             }
             if (SCORE >= 45000 && !activated3) {
                 alwPower3 = true
                 activated3 = true
+                sounder('TuneBox/play.mp3')
                 gsap.to(power3, { opacity: 1, duration: .5 })
+                // Create the pop in and out animation
+                gsap.to(power3, {scale: 1.3, duration: 0.5, yoyo: true, repeat: 5, ease: "power3.inOut"})
             }
         }
     }, 1200)
@@ -622,28 +640,9 @@ function animator() {
         else
             target.update()
 
-        // Check for game over condition
+        // Check for game over condition: Target reach player
         if (dist - target.radius - player.radius < 1)
-        {
-            GAME0N = false
-            music.pause()
-            sounder('TuneBox/game.mp3')
-
-            // Pause the animation loop and remove event listeners
-            cancelAnimationFrame(animeID)
-            removeEventListener('click', _shooter)
-            removeEventListener('mouseup', _mouseup)
-            removeEventListener('mousedown', _mousedown)
-            removeEventListener('mousemove', _mousemove)
-            musicControl.removeEventListener('click', _music)
-            soundControl.removeEventListener('click', _sound)
-            gameControl.removeEventListener('click', _pauser)
-
-            // Display game board
-            startGameBrd.style.display = 'flex'
-            startGameBtm.addEventListener('click', _board)
-            scoreBrd.innerHTML = SCORE
-        }
+            GameOver()
 
         // Check for collision between darts and targets
         for (let Dndx = DARTS.length - 1; Dndx >= 0; Dndx--) {
@@ -668,7 +667,10 @@ function animator() {
                 {
                     SCORE += 100
                     score.innerHTML = SCORE
-                    let volume = 0.01 * target.radius + 0.5
+                    // Score pop out & sound effect
+                    gsap.to(score, {scale: 1, duration: 0.1})
+                    gsap.to(score, {scale: 1.3, duration: 0.1})
+                    gsap.to(score, {scale: 1, duration: 0.1, delay: 0.1})
 
                     gsap.to(target, {
                         radius: target.radius - 10
@@ -681,6 +683,10 @@ function animator() {
 
                     SCORE += 250
                     score.innerHTML = SCORE
+                    // Score pop out & sound effect
+                    gsap.to(score, {scale: 1, duration: 0.1})
+                    gsap.to(score, {scale: 1.5, duration: 0.1})
+                    gsap.to(score, {scale: 1, duration: 0.1, delay: 0.1})
 
                     target.colossal ? sounder('TuneBox/bom.mp3') : sounder('TuneBox/pop.mp3')
 
@@ -691,6 +697,61 @@ function animator() {
             }
         }
     }
+}
+
+//< GAME OVER >\\
+function GameOver() {
+    GAME0N = false
+
+    music.pause()
+    sounder('TuneBox/game.mp3')
+    // Cancel Game loop
+    cancelAnimationFrame(animeID)
+
+    // Player reached
+    gsap.to(player, {color: player.color, onUpdate: () => player.draw()});
+
+    /// Player explode effect
+    // create particles
+    PARTICLES = []
+    for (let i = 0; i < 150; i++) {
+        let particle = new Particle(player.x, player.y, 'white', Math.random() * 5,
+            {
+                x: (Math.random() - 0.5) * (Math.random() * 8),
+                y: (Math.random() - 0.5) * (Math.random() * 8)
+            }
+        );
+        particle.friction = 1.01
+        PARTICLES.push(particle)
+    }
+    // scatter particles
+    function animateParticles() {
+        requestAnimationFrame(animateParticles);
+        PARTICLES.forEach((particle, index) => {
+            if (particle.opacity > 0) {
+                particle.update();
+            } else {
+                PARTICLES.splice(index, 1);
+            }
+        });
+    }
+    animateParticles()
+
+    // Pause the animation loop and remove event listeners
+    removeEventListener('click', _shooter)
+    removeEventListener('mouseup', _mouseup)
+    removeEventListener('mousedown', _mousedown)
+    removeEventListener('mousemove', _mousemove)
+    musicControl.removeEventListener('click', _music)
+    soundControl.removeEventListener('click', _sound)
+    gameControl.removeEventListener('click', _pauser)
+
+    // Display game board
+    setTimeout(() => {
+        startGameBrd.style.display = 'flex'
+        startGameBtm.addEventListener('click', _board)
+        scoreBrd.innerHTML = SCORE
+    }, 4200)
 }
 
 
@@ -810,9 +871,10 @@ startGameBtm.addEventListener('click', _board = () => {
         gsap.to(main, { top: '90%', duration: 1, ease: "main.inOut"})
 
     // Game GUID In Out
-    if (SCORE == 0)
-    gsap.to(guid, {left: '25px', duration: 1, ease: "guid.in"})
-    gsap.to(guid, {left: '-320px', duration: 0.5, delay: 7})
+    if (SCORE == 0) {
+        gsap.to(guid, {left: '25px', duration: 1, ease: "guid.in"})
+        gsap.to(guid, {left: '-320px', duration: 0.5, delay: 7})
+    }
 
     // Initialize game components and start animations
     init()
