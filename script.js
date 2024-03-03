@@ -372,9 +372,10 @@ function Normal() {
                 velocity
             ))
 
-            // Cursor animation
-            gsap.to(htmlCanvas, {cursor: "url('VisualVault/_aim.png') 25 25, auto"})
-            gsap.to(htmlCanvas, {cursor: "url('VisualVault/aim.png') 25 25, auto"})
+            htmlCanvas.style.cursor = "url('VisualVault/_aim.png') 25 25, auto";
+            setTimeout(() => {
+                htmlCanvas.style.cursor = "url('VisualVault/aim.png') 30 30, auto";
+            }, 70); // Adjust delay as needed
 
             // Play shooting sound effect
             sounder('TuneBox/shot.mp3', 0.6)
@@ -562,7 +563,7 @@ function spawnTargets() {
                     timer++
             }
             // Activate power-ups based on score thresholds
-            if (SCORE >= 20000 && !activated2) {
+            if (SCORE >= 2000 && !activated2) {
                 alwPower2 = true
                 activated2 = true
                 gsap.to(power2, { opacity: 1, duration: .5 })
