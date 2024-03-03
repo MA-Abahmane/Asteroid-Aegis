@@ -722,7 +722,7 @@ function pass() {
             layer6.style.display = 'none'
             layer5.style.display = 'none'
             layer4.style.display = 'none'
-        }, 2000)
+        }, 1170)
     }
 }
 
@@ -773,7 +773,7 @@ inner.addEventListener('click', loader = () => {
                     outer.classList.add('active-loader')
                 }
             }
-        }, 75) // Loading speed
+        }, 5) // Loading speed
 
          /* Process appear one by one */
         const ls = [p1, p2, p3];
@@ -796,6 +796,7 @@ inner.addEventListener('click', loader = () => {
 
 /// START GAME \\\
 // Event listener for starting the game
+// Display start game board after animation out
 startGameBtm.addEventListener('click', _board = () => {
     // Hide start game board remove event listener
     startGameBrd.style.display = 'none'
