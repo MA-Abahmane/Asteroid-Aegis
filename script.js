@@ -8,6 +8,15 @@ const c = canvas.getContext('2d')
 canvas.width = innerWidth
 canvas.height = innerHeight
 
+// Load the image
+const backgroundImage = new Image();
+backgroundImage.src = 'VisualVault/bg.png'; // Replace with your image path
+
+// Draw the image onto the canvas once it's loaded
+backgroundImage.onload = function() {
+    c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+}
+
 // Query Selections for UI elements \\
 const htmlCanvas = document.getElementsByTagName("canvas")[0];
 const score = document.querySelector('#scorenum')
@@ -48,7 +57,11 @@ class Player {
         this.y = y
         this.color = color
         this.radius = radius
-        this.sfrRadius = 0 // Sphere radius for chameleon mode
+        this.sfrRadius = 50 // Sphere radius for chameleon mode
+
+        // Load the GIF
+        this.gif = new Image();
+        this.gif.src = 'VisualVault/earth.gif'
     }
 
     // Method to draw the player on canvas
@@ -57,14 +70,22 @@ class Player {
         c.beginPath()
         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
         c.fillStyle = this.color
+        c.shadowBlur = 70
+        c.shadowColor = this.color
         c.fill()
-
+        
+        // Draw the GIF inside the player circle if it's loaded
+        if (this.gif.complete) {
+            c.drawImage(this.gif, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+        }
+        
         // Draw outer circle for chameleon mode
         c.beginPath()
         c.arc(this.x, this.y, this.sfrRadius, 0, Math.PI * 2, false)
         c.lineWidth = 4
         c.strokeStyle = this.color
         c.stroke()
+        c.shadowBlur = 0
     }
 }
 
@@ -218,7 +239,7 @@ function init()
 
     // Create player object
     GAME0N = true
-    player = new Player(innerWidth / 2, innerHeight / 2, 'crimson', 40)
+    player = new Player(innerWidth / 2, innerHeight / 2, 'white', 40)
 
     // Initialize lists
     DARTS = []
@@ -336,18 +357,18 @@ function pausePlay() {
 //| GAME MODES |\\
 /// Chameleon MODE; Make player change colors like a chameleon
 function chameleon() {
-    let n = 0
-    // Iterate through the color wheel
-    const id = setInterval(() => {
-        if (!PAUSED && GAME0N)
-        {
-            // Green Sock Animation to change player color
-            gsap.to(player, {
-                color: `hsl(${n}, 58%, 55%)`
-            })
-            n += 2
-        }
-    }, 1000)
+    // let n = 0
+    // // Iterate through the color wheel
+    // const id = setInterval(() => {
+    //     if (!PAUSED && GAME0N)
+    //     {
+    //         // Green Sock Animation to change player color
+    //         gsap.to(player, {
+    //             color: `hsl(${n}, 58%, 55%)`
+    //         })
+    //         n += 2
+    //     }
+    // }, 1000)
 
     // Set up player SPHERE animation
     gsap.to(player, { sfrRadius: 100, duration: 0.7, ease: "player.in"})
@@ -602,11 +623,16 @@ function animator() {
         animeID = requestAnimationFrame(animator)
 
     // Clear frame
-    c.fillStyle = 'rgba(0, 0 , 0 , .1)'
-    c.fillRect(0, 0, canvas.width, canvas.height)
+    // Draw background image
+    if (backgroundImage.complete) {
+        c.globalAlpha = 0.1; // Lower the opacity
+        c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+        c.globalAlpha = 1; // Reset the opacity
+    }
 
-    // Draw player
-    player.draw()
+    // Clear frame
+    c.fillStyle = 'rgba(0, 0 , 0 , .01)';
+    c.fillRect(0, 0, canvas.width, canvas.height);
 
     // Update and draw particles
     PARTICLES.forEach((particle, Pndx) => {
@@ -628,6 +654,9 @@ function animator() {
             DARTS.splice(Dndx, 1)
         }
     }
+
+    // Draw player
+    player.draw()
 
     // Update and draw targets
     for (let Tndx = TARGETS.length - 1; Tndx >= 0; Tndx--) {
