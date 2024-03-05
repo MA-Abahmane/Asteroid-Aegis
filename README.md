@@ -1,4 +1,4 @@
-# Asteroid-Aegis
+# Asteroid-Aegis V2 [Under Development ⚠]
 
 Asteroid Aegis is an exciting HTML5 game where you defend your base from incoming asteroids. Test your reflexes and strategic skills as you blast away asteroids and aim for the highest score!
 
@@ -60,6 +60,9 @@ This project is licensed under the [MIT License](https://github.com/MA-Abahmane/
 <br>
 
 ---
+V1.9.0
 Game [***Link1***](https://asteroid-aegis.tech/) <br>
 Game [***Link2***](https://asteroid-aegis.netlify.app/) <br>
 Game [***Link3***](https://ma-abahmane.github.io/Asteroid-Aegis/)
+v2.1.1
+Game [***Link***](https://asteroid-aegis2.netlify.app/) <br>
