@@ -4,8 +4,9 @@ Asteroid Aegis is an exciting HTML5 game where you defend your base from incomin
 
 
 ## Table of Contents
-- [Trailer](#trailer)
 - [Introduction](#introduction)
+- [Trailer](#trailer)
+- [Gameplay](#gameplay)
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Game Controls](#game-controls)
@@ -13,15 +14,15 @@ Asteroid Aegis is an exciting HTML5 game where you defend your base from incomin
 - [License](#license)
 - [Author](#author)
 
-
-<h2 id='trailer'>Trailer</h2>
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/ICB6FBiCaZA?si=IzCvcIdP4bEPloVU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-
-
 <h2 id='introduction'>Introduction</h2>
 
 &nbsp; &nbsp; &nbsp; ***Asteroid Aegis*** is an addictive arcade-style game where players control a base and must defend it from asteroids hurtling towards it. The game features fast-paced action, vibrant graphics, and immersive sound effects to keep players engaged for hours.
+
+<h2 id='trailer'>Trailer</h2>
+https://www.youtube.com/watch?v=ICB6FBiCaZA
+
+<h2 id='gameplay'>Gameplay</h2>
+[https://www.youtube.com/watch?v=ICB6FBiCaZA](https://www.youtube.com/watch?v=ICB6FBiCaZA)
 
 <h2 id='features'>Features</h2>
 
