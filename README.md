@@ -16,7 +16,7 @@ Asteroid Aegis is an exciting HTML5 game where you defend your base from incomin
 
 <h2 id='trailer'>Trailer</h2>
 
-[![Watch the video](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=ICB6FBiCaZA)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ICB6FBiCaZA?si=IzCvcIdP4bEPloVU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 
 <h2 id='introduction'>Introduction</h2>
