@@ -187,6 +187,8 @@ let USERNAME = 'Player'
 let GAME0N = true
 // Player score
 let SCORE = 0
+// Target spawn time
+let milisecs = 3000
 // List to store projectiles
 let DARTS = []
 // List to store targets
@@ -248,6 +250,9 @@ function init()
     while (intervalID--) {
         clearInterval(intervalID);
     }
+
+    // Reset to level 1 difficulty
+    milisecs = 3000
 
     // Reset score
     SCORE = 0
@@ -338,7 +343,7 @@ function pausePlay() {
 function chameleon() {
     let n = 0
     // Iterate through the color wheel
-    const id = setInterval(() => {
+    setInterval(() => {
         if (!PAUSED && GAME0N)
         {
             // Green Sock Animation to change player color
@@ -527,72 +532,96 @@ function power_III() {
 /// SPAWN Targets \\\
 let timer = 0
 let spawnTargetsID
-let activated2, activated3 = false
 function spawnTargets() {
     // SetInterval; spawn targets at intervals
-    spawnTargetsID = setInterval(() => {
-        if (!PAUSED && GAME0N)
-        {
-            // Randomize target size and spawn location
-            const radius = Math.random() * (50 - 15) + 15
-            if (Math.random() < 0.5) {
-                // Spawn targets randomly on the width axis
-                var x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius
-                var y = Math.random() * canvas.height
-            } else {
-                // Spawn targets randomly on the height axis
-                var x = Math.random() * canvas.width
-                var y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius
-            }
-            /// Target creation
-            // Randomize target color and velocity
-            const color = `hsl(${Math.random() * 360}, 50%, 50%)`
-            const angle = Math.atan2(canvas.height / 2 - y , canvas.width / 2 - x)
-            const velocity = {
-                x: Math.cos(angle),
-                y: Math.sin(angle)
-            }
-            TARGETS.push(new Targets(x, y, color, radius, velocity))
+    spawnTargetsID = setInterval(spawnTarget, milisecs)
+}
 
-            //~ Unleash The COLOSSAL Target ~\\
-            if (SCORE > 50000)
-            {
-                if (timer >= 40)
-                {
-                    let radius = 100
-                    let x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius
-                    let y = Math.random() * canvas.height
-                    const angle = Math.atan2(canvas.height / 2 - y , canvas.width / 2 - x)
-                    const velocity = {
-                        x: Math.cos(angle),
-                        y: Math.sin(angle)
-                    }
-                    // Create colossal target after a certain score threshold
-                    TARGETS.push(new colossalTargets(x, y, 'white', radius, velocity))
-                    timer = 0
-                }
-                else
-                    timer++
-            }
-            // Activate power-ups based on score thresholds
-            if (SCORE >= 20000 && !activated2) {
-                alwPower2 = true
-                activated2 = true
-                sounder('TuneBox/play.mp3')
-                gsap.to(power2, { opacity: 1, duration: .5 })
-                // Create the pop in and out animation
-                gsap.to(power2, {scale: 1.3, duration: 0.5, yoyo: true, repeat: 5, ease: "power2.inOut"})
-            }
-            if (SCORE >= 45000 && !activated3) {
-                alwPower3 = true
-                activated3 = true
-                sounder('TuneBox/play.mp3')
-                gsap.to(power3, { opacity: 1, duration: .5 })
-                // Create the pop in and out animation
-                gsap.to(power3, {scale: 1.3, duration: 0.5, yoyo: true, repeat: 5, ease: "power3.inOut"})
-            }
+let activated2, activated3 = false
+function spawnTarget() {
+    if (!PAUSED && GAME0N)
+        {
+        // Randomize target size and spawn location
+        const radius = Math.random() * (50 - 15) + 15
+        if (Math.random() < 0.5) {
+            // Spawn targets randomly on the width axis
+            var x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius
+            var y = Math.random() * canvas.height
+        } else {
+            // Spawn targets randomly on the height axis
+            var x = Math.random() * canvas.width
+            var y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius
         }
-    }, 1200)
+        /// Target creation
+        // Randomize target color and velocity
+        const color = `hsl(${Math.random() * 360}, 50%, 50%)`
+        const angle = Math.atan2(canvas.height / 2 - y , canvas.width / 2 - x)
+        const velocity = {
+            x: Math.cos(angle),
+            y: Math.sin(angle)
+        }
+        TARGETS.push(new Targets(x, y, color, radius, velocity))
+
+        //~ Unleash The COLOSSAL Target ~\\
+        if (SCORE > 50000)
+        {
+            if (timer >= 30)
+            {
+                let radius = 100
+                let x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius
+                let y = Math.random() * canvas.height
+                const angle = Math.atan2(canvas.height / 2 - y , canvas.width / 2 - x)
+                const velocity = {
+                    x: Math.cos(angle),
+                    y: Math.sin(angle)
+                }
+                // Create colossal target after a certain score threshold
+                TARGETS.push(new colossalTargets(x, y, 'white', radius, velocity))
+                timer = 0
+            }
+            else
+                timer++
+        }
+
+        if (SCORE >= 10000 && milisecs > 2500) {
+            // Increase game difficulty
+            milisecs = 2500
+            resetInterval();
+        }
+        // Activate power-ups based on score thresholds
+        if (SCORE >= 20000 && !activated2) {
+            alwPower2 = true
+            activated2 = true
+            sounder('TuneBox/play.mp3')
+            gsap.to(power2, { opacity: 1, duration: .5 })
+            // Create the pop in and out animation
+            gsap.to(power2, {scale: 1.3, duration: 0.5, yoyo: true, repeat: 5, ease: "power2.inOut"})
+            // Increase game difficulty
+            milisecs = 2000
+            resetInterval();
+        }
+        if (SCORE >= 30000 && milisecs > 1500){
+            // Increase game difficulty
+            milisecs = 1500
+            resetInterval();
+        }
+        if (SCORE >= 45000 && !activated3) {
+            alwPower3 = true
+            activated3 = true
+            sounder('TuneBox/play.mp3')
+            gsap.to(power3, { opacity: 1, duration: .5 })
+            // Create the pop in and out animation
+            gsap.to(power3, {scale: 1.3, duration: 0.5, yoyo: true, repeat: 5, ease: "power3.inOut"})
+            // Increase game difficulty
+            milisecs = 1300
+            resetInterval();
+        }
+    }
+}
+// Reset Interval
+function resetInterval() {
+    clearInterval(spawnTargetsID)
+    spawnTargets()
 }
 
 //-/ Animation GAME LOOP \-\\
@@ -751,7 +780,7 @@ function GameOver() {
         startGameBrd.style.display = 'flex'
         startGameBtm.addEventListener('click', _board)
         scoreBrd.innerHTML = SCORE
-    }, 4200)
+    }, 4000)
 }
 
 
