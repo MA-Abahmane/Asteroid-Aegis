@@ -36,7 +36,7 @@ https://www.youtube.com/watch?v=AoH9SQb6Rq4
 <h2 id='getting-started'>Getting Started</h2>
 
 To play Asteroid Aegis, simply follow these steps:
-1. **Click [**here**](https://ma-abahmane.github.io/Asteroid-Aegis/) to access the game:** You can start playing by clicking on the provided link, which will take you directly to the game page.
+1. **Click [**here**](https://asteroid-aegis.netlify.app/) to access the game:** You can start playing by clicking on the provided link, which will take you directly to the game page.
 Once on the game page, you can:
 2. **Start the Game:** Once on the game page, you can Click on the "Start Game" button to begin your asteroid-defending adventure.
 3. **Toggle Game Controls:** Use the provided buttons to control music, sound effects, and game settings.
